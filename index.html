@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Kick Login</title>
+    <title>Kick Shop - Login</title>
     <style>
         * {
             margin: 0;
@@ -112,20 +112,38 @@
             color: #53fc18;
             font-size: 12px;
         }
+
+        .callback-info {
+            display: none;
+            margin-top: 20px;
+            padding: 15px;
+            background: rgba(83, 252, 24, 0.1);
+            border-radius: 10px;
+            color: #fff;
+        }
+
+        .callback-info.show {
+            display: block;
+        }
     </style>
 </head>
 <body>
     <div class="login-container">
         <div class="logo">🎮</div>
-        <h1>Kick Login</h1>
+        <h1>Kick Shop</h1>
         <p class="subtitle">Přihlaste se ke svému Kick účtu</p>
 
-        <a href="https://kick.com/oauth/authorize?client_id=01KJDBHDCTMKE7JFHFDS7PH6X4&redirect_uri=YOUR_REDIRECT_URI&response_type=code&scope=..." class="kick-btn">
+        <button class="kick-btn" id="loginBtn">
             <svg viewBox="0 0 24 24" fill="currentColor">
                 <path d="M4 2h16a2 2 0 012 2v16a2 2 0 01-2 2H4a2 2 0 01-2-2V4a2 2 0 012-2zm4 6v8h2.5v-8H8zm3.5 0v8H14v-3.5h-2.5V11H14V8h-2.5zm5 0v5c0 1-1 1.5-1.5 1.5H16V8h3zm-3 5V8h2v5h-2z"/>
             </svg>
             Přihlásit se přes Kick
-        </a>
+        </button>
+
+        <div class="callback-info" id="callbackInfo">
+            <p>✅ Přihlášení úspěšné!</p>
+            <p id="userInfo"></p>
+        </div>
 
         <div class="features">
             <div class="feature">
@@ -144,5 +162,108 @@
 
         <p class="footer">Přihlášením souhlasíte s podmínkami použití</p>
     </div>
+
+    <script>
+        const CLIENT_ID = '01KJDBHDCTMKE7JFHFDS7PH6X4';
+        const REDIRECT_URI = 'https://ytbpetrak7-create.github.io/kickshop/';
+        const SCOPES = 'user:read channel:read';
+
+        // Generate random string
+        function generateRandomString(length) {
+            const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789-._~';
+            let result = '';
+            const randomValues = new Uint8Array(length);
+            crypto.getRandomValues(randomValues);
+            for (let i = 0; i < length; i++) {
+                result += chars[randomValues[i] % chars.length];
+            }
+            return result;
+        }
+
+        // SHA-256 hash
+        async function sha256(plain) {
+            const encoder = new TextEncoder();
+            const data = encoder.encode(plain);
+            return crypto.subtle.digest('SHA-256', data);
+        }
+
+        // Base64 URL encode
+        function base64urlencode(buffer) {
+            const bytes = new Uint8Array(buffer);
+            let str = '';
+            for (const char of bytes) {
+                str += String.fromCharCode(char);
+            }
+            return btoa(str).replace(/\+/g, '-').replace(/\//g, '_').replace(/=+$/, '');
+        }
+
+        // Generate PKCE codes
+        async function generatePKCE() {
+            const codeVerifier = generateRandomString(64);
+            const challengeBuffer = await sha256(codeVerifier);
+            const codeChallenge = base64urlencode(challengeBuffer);
+            return { codeVerifier, codeChallenge };
+        }
+
+        // Login function
+        async function loginWithKick() {
+            const { codeVerifier, codeChallenge } = await generatePKCE();
+            const state = generateRandomString(32);
+
+            // Store code verifier for later use
+            localStorage.setItem('pkce_code_verifier', codeVerifier);
+            localStorage.setItem('oauth_state', state);
+
+            const params = new URLSearchParams({
+                response_type: 'code',
+                client_id: CLIENT_ID,
+                redirect_uri: REDIRECT_URI,
+                scope: SCOPES,
+                state: state,
+                code_challenge: codeChallenge,
+                code_challenge_method: 'S256'
+            });
+
+            window.location.href = `https://id.kick.com/oauth/authorize?${params.toString()}`;
+        }
+
+        // Handle callback
+        async function handleCallback() {
+            const urlParams = new URLSearchParams(window.location.search);
+            const code = urlParams.get('code');
+            const state = urlParams.get('state');
+            const error = urlParams.get('error');
+
+            if (error) {
+                console.error('OAuth error:', error);
+                return;
+            }
+
+            if (code) {
+                // Verify state
+                const savedState = localStorage.getItem('oauth_state');
+                if (state !== savedState) {
+                    console.error('State mismatch - possible CSRF attack');
+                    return;
+                }
+
+                document.getElementById('callbackInfo').classList.add('show');
+                document.getElementById('userInfo').textContent = `Auth code: ${code.substring(0, 20)}...`;
+
+                console.log('Authorization code received:', code);
+                console.log('Save this code and exchange it on your backend for access tokens!');
+
+                // Clean up
+                localStorage.removeItem('pkce_code_verifier');
+                localStorage.removeItem('oauth_state');
+            }
+        }
+
+        // Event listeners
+        document.getElementById('loginBtn').addEventListener('click', loginWithKick);
+
+        // Check if returning from OAuth
+        handleCallback();
+    </script>
 </body>
 </html>
