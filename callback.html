@@ -1,0 +1,329 @@
+<!DOCTYPE html>
+<html lang="cs">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Kick Shop - Odmeny</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            min-height: 100vh;
+            background: linear-gradient(135deg, #1a1a2e 0%, #16213e 50%, #0f3460 100%);
+            color: #fff;
+            padding: 40px 20px;
+        }
+
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 40px;
+        }
+
+        .logo {
+            font-size: 36px;
+            margin-bottom: 10px;
+        }
+
+        h1 {
+            color: #53fc18;
+            font-size: 32px;
+            margin-bottom: 8px;
+        }
+
+        .subtitle {
+            color: rgba(255, 255, 255, 0.6);
+            font-size: 14px;
+        }
+
+        .user-info {
+            background: rgba(255, 255, 255, 0.05);
+            backdrop-filter: blur(10px);
+            border-radius: 16px;
+            padding: 20px 30px;
+            margin-bottom: 30px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            display: flex;
+            align-items: center;
+            gap: 20px;
+        }
+
+        .user-avatar {
+            width: 60px;
+            height: 60px;
+            background: linear-gradient(135deg, #53fc18, #45e012);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 24px;
+        }
+
+        .user-details h3 {
+            color: #53fc18;
+            font-size: 18px;
+            margin-bottom: 4px;
+        }
+
+        .user-details p {
+            color: rgba(255, 255, 255, 0.6);
+            font-size: 13px;
+        }
+
+        .rewards-section {
+            margin-bottom: 30px;
+        }
+
+        .section-title {
+            font-size: 20px;
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .section-title span {
+            color: #53fc18;
+        }
+
+        .rewards-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+            gap: 20px;
+        }
+
+        .reward-card {
+            background: rgba(255, 255, 255, 0.05);
+            backdrop-filter: blur(10px);
+            border-radius: 16px;
+            padding: 25px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            transition: all 0.3s ease;
+            cursor: pointer;
+        }
+
+        .reward-card:hover {
+            transform: translateY(-5px);
+            border-color: #53fc18;
+            box-shadow: 0 10px 30px rgba(83, 252, 24, 0.2);
+        }
+
+        .reward-icon {
+            font-size: 32px;
+            margin-bottom: 15px;
+        }
+
+        .reward-name {
+            font-size: 16px;
+            font-weight: 600;
+            margin-bottom: 8px;
+        }
+
+        .reward-cost {
+            color: #53fc18;
+            font-size: 14px;
+            font-weight: 600;
+            margin-bottom: 10px;
+        }
+
+        .reward-desc {
+            color: rgba(255, 255, 255, 0.6);
+            font-size: 13px;
+            line-height: 1.4;
+        }
+
+        .points-balance {
+            background: linear-gradient(135deg, #53fc18, #45e012);
+            color: #000;
+            padding: 20px 30px;
+            border-radius: 16px;
+            text-align: center;
+            margin-bottom: 30px;
+        }
+
+        .points-balance h2 {
+            font-size: 14px;
+            font-weight: 600;
+            margin-bottom: 5px;
+            text-transform: uppercase;
+        }
+
+        .points-balance .amount {
+            font-size: 36px;
+            font-weight: 700;
+        }
+
+        .loading {
+            text-align: center;
+            padding: 60px 20px;
+        }
+
+        .spinner {
+            width: 50px;
+            height: 50px;
+            border: 4px solid rgba(255, 255, 255, 0.1);
+            border-top-color: #53fc18;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+            margin: 0 auto 20px;
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+
+        .error {
+            text-align: center;
+            padding: 60px 20px;
+        }
+
+        .error h2 {
+            color: #ff4757;
+            margin-bottom: 10px;
+        }
+
+        .btn {
+            display: inline-block;
+            background: #53fc18;
+            color: #000;
+            padding: 12px 30px;
+            border-radius: 10px;
+            text-decoration: none;
+            font-weight: 600;
+            margin-top: 20px;
+            transition: all 0.3s ease;
+        }
+
+        .btn:hover {
+            background: #45e012;
+            transform: translateY(-2px);
+        }
+
+        .hidden {
+            display: none;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <div class="logo">🎮</div>
+            <h1>Kick Shop - Odmeny</h1>
+            <p class="subtitle">Tva odmena za body na Kick</p>
+        </div>
+
+        <div id="loading" class="loading">
+            <div class="spinner"></div>
+            <p>Nacitam data...</p>
+        </div>
+
+        <div id="error" class="error hidden">
+            <h2>Chyba</h2>
+            <p id="errorMsg"></p>
+            <a href="index.html" class="btn">Zkusit znovu</a>
+        </div>
+
+        <div id="content" class="hidden">
+            <div class="user-info">
+                <div class="user-avatar">👤</div>
+                <div class="user-details">
+                    <h3 id="username">Nacitani...</h3>
+                    <p>Prihlasen pres Kick</p>
+                </div>
+            </div>
+
+            <div class="points-balance">
+                <h2>Tvuj zustatek bodu</h2>
+                <div class="amount" id="points">--</div>
+            </div>
+
+            <div class="rewards-section">
+                <h2 class="section-title"><span>🎁</span> Dostupne odmeny</h2>
+                <div class="rewards-grid" id="rewardsGrid">
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const CLIENT_ID = '01KJDBHDCTMKE7JFHFDS7PH6X4';
+        const REDIRECT_URI = 'https://ytbpetrak7-create.github.io/kickshop/callback.html';
+
+        async function handleCallback() {
+            const urlParams = new URLSearchParams(window.location.search);
+            const code = urlParams.get('code');
+            const state = urlParams.get('state');
+            const error = urlParams.get('error');
+
+            if (error) {
+                showError('Opravneni bylo zamitnuto nebo nastala chyba.');
+                return;
+            }
+
+            if (!code) {
+                showError('Chybi autorizacni kod.');
+                return;
+            }
+
+            const savedState = localStorage.getItem('oauth_state');
+            if (state !== savedState) {
+                showError('Nesouhlasi state parametr - mozna CSRF utok.');
+                return;
+            }
+
+            try {
+                // Zobrazi info o kodu (pro demo - v produkci by se kod exchangeoval na backendu)
+                document.getElementById('loading').classList.add('hidden');
+                document.getElementById('content').classList.remove('hidden');
+
+                document.getElementById('username').textContent = 'Petrak7';
+                document.getElementById('points').textContent = '1,250';
+
+                // Demo odmeny
+                const rewards = [
+                    { icon: '🎁', name: 'Gift sub', cost: '500 bodu', desc: 'Daruj subscribersvi na kanale' },
+                    { icon: '⭐', name: 'Special badge', cost: '250 bodu', desc: 'Ziskej exkluzivni odznak' },
+                    { icon: '🎮', name: 'Hra zdarma', cost: '1000 bodu', desc: 'Ziskej hru zdarma' },
+                    { icon: '👕', name: 'Merch', cost: '2000 bodu', desc: 'Fyzicky merchandise' },
+                    { icon: '💬', name: 'Priority v chatu', cost: '100 bodu', desc: 'Tva zprava bude zvyraznena' },
+                    { icon: '🎯', name: 'Custom reward', cost: '750 bodu', desc: 'Vlastni odmena dle domluvy' }
+                ];
+
+                const grid = document.getElementById('rewardsGrid');
+                rewards.forEach(reward => {
+                    grid.innerHTML += `
+                        <div class="reward-card">
+                            <div class="reward-icon">${reward.icon}</div>
+                            <div class="reward-name">${reward.name}</div>
+                            <div class="reward-cost">${reward.cost}</div>
+                            <div class="reward-desc">${reward.desc}</div>
+                        </div>
+                    `;
+                });
+
+                localStorage.removeItem('oauth_state');
+
+            } catch (err) {
+                showError('Chyba pri zpracovani: ' + err.message);
+            }
+        }
+
+        function showError(msg) {
+            document.getElementById('loading').classList.add('hidden');
+            document.getElementById('error').classList.remove('hidden');
+            document.getElementById('errorMsg').textContent = msg;
+        }
+
+        handleCallback();
+    </script>
+</body>
+</html>
