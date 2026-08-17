@@ -20,7 +20,7 @@
         }
 
         .container {
-            max-width: 800px;
+            max-width: 900px;
             margin: 0 auto;
         }
 
@@ -79,68 +79,6 @@
             font-size: 13px;
         }
 
-        .rewards-section {
-            margin-bottom: 30px;
-        }
-
-        .section-title {
-            font-size: 20px;
-            margin-bottom: 20px;
-            display: flex;
-            align-items: center;
-            gap: 10px;
-        }
-
-        .section-title span {
-            color: #53fc18;
-        }
-
-        .rewards-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
-            gap: 20px;
-        }
-
-        .reward-card {
-            background: rgba(255, 255, 255, 0.05);
-            backdrop-filter: blur(10px);
-            border-radius: 16px;
-            padding: 25px;
-            border: 1px solid rgba(255, 255, 255, 0.1);
-            transition: all 0.3s ease;
-            cursor: pointer;
-        }
-
-        .reward-card:hover {
-            transform: translateY(-5px);
-            border-color: #53fc18;
-            box-shadow: 0 10px 30px rgba(83, 252, 24, 0.2);
-        }
-
-        .reward-icon {
-            font-size: 32px;
-            margin-bottom: 15px;
-        }
-
-        .reward-name {
-            font-size: 16px;
-            font-weight: 600;
-            margin-bottom: 8px;
-        }
-
-        .reward-cost {
-            color: #53fc18;
-            font-size: 14px;
-            font-weight: 600;
-            margin-bottom: 10px;
-        }
-
-        .reward-desc {
-            color: rgba(255, 255, 255, 0.6);
-            font-size: 13px;
-            line-height: 1.4;
-        }
-
         .points-balance {
             background: linear-gradient(135deg, #53fc18, #45e012);
             color: #000;
@@ -160,6 +98,123 @@
         .points-balance .amount {
             font-size: 36px;
             font-weight: 700;
+        }
+
+        .rewards-section {
+            margin-bottom: 30px;
+        }
+
+        .section-title {
+            font-size: 20px;
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .section-title span {
+            color: #53fc18;
+        }
+
+        .rewards-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+            gap: 20px;
+        }
+
+        .reward-card {
+            background: rgba(255, 255, 255, 0.05);
+            backdrop-filter: blur(10px);
+            border-radius: 16px;
+            padding: 25px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            transition: all 0.3s ease;
+            cursor: pointer;
+        }
+
+        .reward-card:hover {
+            transform: translateY(-5px);
+            border-color: #53fc18;
+            box-shadow: 0 10px 30px rgba(83, 252, 24, 0.2);
+        }
+
+        .reward-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: 15px;
+        }
+
+        .reward-icon {
+            font-size: 32px;
+        }
+
+        .reward-platform {
+            display: flex;
+            gap: 5px;
+        }
+
+        .platform-badge {
+            background: rgba(255, 255, 255, 0.1);
+            padding: 4px 8px;
+            border-radius: 6px;
+            font-size: 12px;
+        }
+
+        .platform-badge.kick {
+            background: #53fc18;
+            color: #000;
+        }
+
+        .platform-badge.discord {
+            background: #5865F2;
+            color: #fff;
+        }
+
+        .reward-name {
+            font-size: 16px;
+            font-weight: 600;
+            margin-bottom: 8px;
+        }
+
+        .reward-cost {
+            color: #53fc18;
+            font-size: 14px;
+            font-weight: 600;
+            margin-bottom: 10px;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+
+        .reward-desc {
+            color: rgba(255, 255, 255, 0.6);
+            font-size: 13px;
+            line-height: 1.4;
+        }
+
+        .redeem-btn {
+            width: 100%;
+            background: #53fc18;
+            color: #000;
+            border: none;
+            padding: 12px;
+            border-radius: 10px;
+            font-size: 14px;
+            font-weight: 600;
+            cursor: pointer;
+            margin-top: 15px;
+            transition: all 0.3s ease;
+        }
+
+        .redeem-btn:hover {
+            background: #45e012;
+        }
+
+        .redeem-btn:disabled {
+            background: rgba(255, 255, 255, 0.1);
+            color: rgba(255, 255, 255, 0.4);
+            cursor: not-allowed;
         }
 
         .loading {
@@ -211,6 +266,21 @@
         .hidden {
             display: none;
         }
+
+        .botrix-badge {
+            text-align: center;
+            margin-top: 30px;
+            padding: 15px;
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 10px;
+            color: rgba(255, 255, 255, 0.5);
+            font-size: 12px;
+        }
+
+        .botrix-badge a {
+            color: #53fc18;
+            text-decoration: none;
+        }
     </style>
 </head>
 <body>
@@ -251,12 +321,91 @@
                 <div class="rewards-grid" id="rewardsGrid">
                 </div>
             </div>
+
+            <div class="botrix-badge">
+                Spravovano pres <a href="https://botrix.live" target="_blank">BotRix</a>
+            </div>
         </div>
     </div>
 
     <script>
         const CLIENT_ID = '01KJDBHDCTMKE7JFHFDS7PH6X4';
         const REDIRECT_URI = 'https://ytbpetrak7-create.github.io/kickshop/callback.html';
+
+        // Tvje odmeny z BotRix
+        const REWARDS = [
+            {
+                id: 1,
+                name: 'OG na mem discord serveru',
+                cost: 30000,
+                desc: 'Ziskej titulek OG na discord serveru',
+                icon: '👑',
+                platforms: ['kick', 'discord']
+            },
+            {
+                id: 2,
+                name: 'Pridam si te',
+                cost: 10000,
+                desc: 'Pridam si te ve Epic Games nebo na Steamu',
+                icon: '🎮',
+                platforms: ['kick', 'discord']
+            },
+            {
+                id: 3,
+                name: 'KING na mem discord serveru',
+                cost: 50000,
+                desc: 'Ziskej titulek KING na discord serveru',
+                icon: '🏆',
+                platforms: ['kick', 'discord']
+            },
+            {
+                id: 4,
+                name: '10 kc na moji stranku s bednam',
+                cost: 1000,
+                desc: 'Odkaz na stranku https://ytbpetrak7-create.github.io/bedny/index.html',
+                icon: '🎁',
+                platforms: ['kick']
+            }
+        ];
+
+        function formatPoints(points) {
+            return points.toLocaleString('cs-CZ');
+        }
+
+        function renderRewards(userPoints) {
+            const grid = document.getElementById('rewardsGrid');
+            grid.innerHTML = '';
+
+            REWARDS.forEach(reward => {
+                const canAfford = userPoints >= reward.cost;
+                const card = document.createElement('div');
+                card.className = 'reward-card';
+                card.innerHTML = `
+                    <div class="reward-header">
+                        <div class="reward-icon">${reward.icon}</div>
+                        <div class="reward-platform">
+                            ${reward.platforms.map(p => `
+                                <span class="platform-badge ${p}">${p === 'kick' ? 'K' : 'D'}</span>
+                            `).join('')}
+                        </div>
+                    </div>
+                    <div class="reward-name">${reward.name}</div>
+                    <div class="reward-cost">🪙 ${formatPoints(reward.cost)} bodu</div>
+                    <div class="reward-desc">${reward.desc}</div>
+                    <button class="redeem-btn" ${!canAfford ? 'disabled' : ''} onclick="redeemReward(${reward.id})">
+                        ${canAfford ? 'Vymenit' : 'Nedostatek bodu'}
+                    </button>
+                `;
+                grid.appendChild(card);
+            });
+        }
+
+        function redeemReward(rewardId) {
+            const reward = REWARDS.find(r => r.id === rewardId);
+            if (reward) {
+                alert(`Zvolil jsi: ${reward.name}\n\nPro uplatneni pouzij prikaz v chatu:\n!redeem ${reward.id}`);
+            }
+        }
 
         async function handleCallback() {
             const urlParams = new URLSearchParams(window.location.search);
@@ -281,34 +430,15 @@
             }
 
             try {
-                // Zobrazi info o kodu (pro demo - v produkci by se kod exchangeoval na backendu)
+                // Pro demo zobrazi hardcoded data
+                // V produkci by se kod exchangeoval na backendu pro ziskani access token
                 document.getElementById('loading').classList.add('hidden');
                 document.getElementById('content').classList.remove('hidden');
 
                 document.getElementById('username').textContent = 'Petrak7';
                 document.getElementById('points').textContent = '1,250';
 
-                // Demo odmeny
-                const rewards = [
-                    { icon: '🎁', name: 'Gift sub', cost: '500 bodu', desc: 'Daruj subscribersvi na kanale' },
-                    { icon: '⭐', name: 'Special badge', cost: '250 bodu', desc: 'Ziskej exkluzivni odznak' },
-                    { icon: '🎮', name: 'Hra zdarma', cost: '1000 bodu', desc: 'Ziskej hru zdarma' },
-                    { icon: '👕', name: 'Merch', cost: '2000 bodu', desc: 'Fyzicky merchandise' },
-                    { icon: '💬', name: 'Priority v chatu', cost: '100 bodu', desc: 'Tva zprava bude zvyraznena' },
-                    { icon: '🎯', name: 'Custom reward', cost: '750 bodu', desc: 'Vlastni odmena dle domluvy' }
-                ];
-
-                const grid = document.getElementById('rewardsGrid');
-                rewards.forEach(reward => {
-                    grid.innerHTML += `
-                        <div class="reward-card">
-                            <div class="reward-icon">${reward.icon}</div>
-                            <div class="reward-name">${reward.name}</div>
-                            <div class="reward-cost">${reward.cost}</div>
-                            <div class="reward-desc">${reward.desc}</div>
-                        </div>
-                    `;
-                });
+                renderRewards(1250);
 
                 localStorage.removeItem('oauth_state');
 
