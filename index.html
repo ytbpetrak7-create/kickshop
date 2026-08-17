@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html lang="cs">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Kick Login</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: linear-gradient(135deg, #1a1a2e 0%, #16213e 50%, #0f3460 100%);
+        }
+
+        .login-container {
+            background: rgba(255, 255, 255, 0.05);
+            backdrop-filter: blur(10px);
+            border-radius: 20px;
+            padding: 50px 40px;
+            text-align: center;
+            box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.37);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            max-width: 400px;
+            width: 90%;
+        }
+
+        .logo {
+            font-size: 48px;
+            margin-bottom: 10px;
+        }
+
+        h1 {
+            color: #53fc18;
+            font-size: 28px;
+            margin-bottom: 8px;
+            font-weight: 700;
+        }
+
+        .subtitle {
+            color: rgba(255, 255, 255, 0.6);
+            font-size: 14px;
+            margin-bottom: 30px;
+        }
+
+        .kick-btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 12px;
+            background: #53fc18;
+            color: #000;
+            border: none;
+            padding: 16px 40px;
+            font-size: 18px;
+            font-weight: 700;
+            border-radius: 12px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-decoration: none;
+        }
+
+        .kick-btn:hover {
+            background: #45e012;
+            transform: translateY(-2px);
+            box-shadow: 0 10px 30px rgba(83, 252, 24, 0.3);
+        }
+
+        .kick-btn:active {
+            transform: translateY(0);
+        }
+
+        .kick-btn svg {
+            width: 24px;
+            height: 24px;
+        }
+
+        .footer {
+            margin-top: 25px;
+            color: rgba(255, 255, 255, 0.4);
+            font-size: 12px;
+        }
+
+        .features {
+            margin-top: 30px;
+            text-align: left;
+        }
+
+        .feature {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            color: rgba(255, 255, 255, 0.7);
+            font-size: 14px;
+            margin-bottom: 12px;
+        }
+
+        .feature-icon {
+            width: 20px;
+            height: 20px;
+            background: rgba(83, 252, 24, 0.2);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #53fc18;
+            font-size: 12px;
+        }
+    </style>
+</head>
+<body>
+    <div class="login-container">
+        <div class="logo">🎮</div>
+        <h1>Kick Login</h1>
+        <p class="subtitle">Přihlaste se ke svému Kick účtu</p>
+
+        <a href="https://kick.com/oauth/authorize?client_id=YOUR_CLIENT_ID&redirect_uri=YOUR_REDIRECT_URI&response_type=code&scope=..." class="kick-btn">
+            <svg viewBox="0 0 24 24" fill="currentColor">
+                <path d="M4 2h16a2 2 0 012 2v16a2 2 0 01-2 2H4a2 2 0 01-2-2V4a2 2 0 012-2zm4 6v8h2.5v-8H8zm3.5 0v8H14v-3.5h-2.5V11H14V8h-2.5zm5 0v5c0 1-1 1.5-1.5 1.5H16V8h3zm-3 5V8h2v5h-2z"/>
+            </svg>
+            Přihlásit se přes Kick
+        </a>
+
+        <div class="features">
+            <div class="feature">
+                <div class="feature-icon">✓</div>
+                <span>Přístup k vašemu profilu</span>
+            </div>
+            <div class="feature">
+                <div class="feature-icon">✓</div>
+                <span>Správa kanálu</span>
+            </div>
+            <div class="feature">
+                <div class="feature-icon">✓</div>
+                <span>Bezpečné přihlášení</span>
+            </div>
+        </div>
+
+        <p class="footer">Přihlášením souhlasíte s podmínkami použití</p>
+    </div>
+</body>
+</html>
