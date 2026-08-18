@@ -639,7 +639,7 @@
             if (code && state) {
                 const savedState = localStorage.getItem('oauth_state');
                 if (state === savedState) {
-                    localStorage.setItem('currentUser', 'Kick uzivatel');
+                    localStorage.setItem('currentUser', 'Petrak7');
                     localStorage.removeItem('oauth_state');
                     localStorage.removeItem('pkce_verifier');
                     window.history.replaceState({}, '', window.location.pathname);
