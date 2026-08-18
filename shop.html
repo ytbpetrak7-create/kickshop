@@ -80,31 +80,68 @@
         .command-card .cmd { font-family: monospace; font-size: 16px; color: #53fc18; font-weight: 600; margin-bottom: 8px; }
         .command-card .desc { color: rgba(255,255,255,0.6); font-size: 12px; }
 
-        .rewards-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
-            gap: 20px;
-        }
+        .rewards-list { display: flex; flex-direction: column; gap: 10px; }
 
-        .reward-card {
+        .reward-collapsible {
             background: rgba(255,255,255,0.05);
-            border-radius: 16px;
-            padding: 25px;
+            border-radius: 12px;
             border: 1px solid rgba(255,255,255,0.1);
+            overflow: hidden;
             transition: all 0.3s ease;
         }
 
-        .reward-card:hover { border-color: rgba(83,252,24,0.3); }
+        .reward-collapsible:hover { border-color: rgba(83,252,24,0.3); }
 
-        .reward-header { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 15px; }
-        .reward-icon { font-size: 32px; }
-        .reward-name { font-size: 16px; font-weight: 600; margin-bottom: 8px; }
-        .reward-cost { color: #53fc18; font-size: 14px; font-weight: 600; margin-bottom: 10px; }
-        .reward-desc { color: rgba(255,255,255,0.6); font-size: 13px; line-height: 1.4; }
+        .reward-collapsible.redeemed-one-time {
+            opacity: 0.5;
+            border-color: rgba(83,252,24,0.2);
+        }
+
+        .reward-header-btn {
+            width: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 15px 20px;
+            background: none;
+            border: none;
+            color: #fff;
+            cursor: pointer;
+            font-size: 16px;
+            text-align: left;
+        }
+
+        .reward-header-btn:hover { background: rgba(255,255,255,0.03); }
+
+        .reward-header-left {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .reward-header-left .icon { font-size: 24px; }
+        .reward-header-left .name { font-weight: 600; }
+        .reward-header-left .cost { color: #53fc18; font-size: 13px; margin-left: 10px; }
+
+        .reward-arrow {
+            font-size: 14px;
+            transition: transform 0.3s ease;
+            color: rgba(255,255,255,0.4);
+        }
+
+        .reward-collapsible.open .reward-arrow { transform: rotate(180deg); }
+
+        .reward-body {
+            display: none;
+            padding: 0 20px 20px;
+        }
+
+        .reward-collapsible.open .reward-body { display: block; }
+
+        .reward-desc { color: rgba(255,255,255,0.6); font-size: 14px; margin-bottom: 15px; line-height: 1.5; }
 
         .redeem-btn {
             width: 100%;
-            margin-top: 15px;
             padding: 12px;
             border: none;
             border-radius: 10px;
@@ -118,6 +155,24 @@
         .redeem-btn.can-afford:hover { background: #45e012; }
         .redeem-btn.cannot-afford { background: rgba(255,255,255,0.1); color: rgba(255,255,255,0.4); cursor: not-allowed; }
         .redeem-btn.redeemed { background: rgba(83,252,24,0.2); color: #53fc18; cursor: default; }
+
+        .unlimited-badge {
+            background: rgba(255,165,0,0.2);
+            color: orange;
+            padding: 2px 8px;
+            border-radius: 4px;
+            font-size: 11px;
+            margin-left: 8px;
+        }
+
+        .redeemed-badge {
+            background: rgba(83,252,24,0.2);
+            color: #53fc18;
+            padding: 2px 8px;
+            border-radius: 4px;
+            font-size: 11px;
+            margin-left: 8px;
+        }
 
         .admin-toggle {
             position: fixed;
@@ -317,7 +372,7 @@
             border: 1px solid rgba(255,255,255,0.1);
             border-radius: 16px;
             padding: 30px;
-            max-width: 400px;
+            max-width: 450px;
             width: 90%;
             text-align: center;
         }
@@ -325,6 +380,38 @@
         .modal h3 { margin-bottom: 15px; }
         .modal p { color: rgba(255,255,255,0.6); margin-bottom: 20px; }
         .modal .actions { display: flex; gap: 10px; justify-content: center; }
+
+        .code-box {
+            background: rgba(83,252,24,0.1);
+            border: 2px dashed #53fc18;
+            border-radius: 10px;
+            padding: 20px;
+            margin: 15px 0;
+        }
+
+        .code-box .label { color: rgba(255,255,255,0.6); font-size: 12px; margin-bottom: 8px; }
+        .code-box .code {
+            font-family: monospace;
+            font-size: 20px;
+            color: #53fc18;
+            font-weight: 700;
+            letter-spacing: 2px;
+            user-select: all;
+        }
+
+        .code-box .copy-btn {
+            margin-top: 10px;
+            background: #53fc18;
+            color: #000;
+            border: none;
+            padding: 8px 20px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 12px;
+            font-weight: 600;
+        }
+
+        .code-box .copy-btn:hover { background: #45e012; }
 
         .my-redemptions { margin-top: 20px; }
         .my-redemptions h3 { font-size: 16px; margin-bottom: 10px; color: #53fc18; }
@@ -339,6 +426,15 @@
             font-size: 13px;
         }
         .my-redemption-item .date { color: rgba(255,255,255,0.4); font-size: 11px; }
+
+        .my-redemption-item .code-link {
+            color: #53fc18;
+            cursor: pointer;
+            font-size: 12px;
+            margin-left: 10px;
+        }
+
+        .my-redemption-item .code-link:hover { text-decoration: underline; }
     </style>
 </head>
 <body>
@@ -391,7 +487,7 @@
 
         <div class="section">
             <h2> Dostupne odmeny</h2>
-            <div id="rewardsGrid" class="rewards-grid"></div>
+            <div id="rewardsList" class="rewards-list"></div>
 
             <div class="my-redemptions" id="myRedemptions">
                 <h3>📦 Tve vyzvednute odmeny</h3>
@@ -487,6 +583,9 @@
                         <option value="false">1x vyzvednuti</option>
                         <option value="true">Nekonecno vyzvednuti</option>
                     </select>
+                </div>
+                <div class="form-row">
+                    <input type="text" id="newRewardCode" placeholder="Kod po vyzvednuti (jen pro 10kc+)">
                     <button class="btn" onclick="addReward()">Pridat</button>
                 </div>
             </div>
@@ -513,8 +612,9 @@
         <div class="modal">
             <h3 id="modalTitle">Vyzvednout?</h3>
             <p id="modalDesc">Opravdu?</p>
+            <div id="modalCodeBox" style="display: none;"></div>
             <div class="actions">
-                <button class="btn btn-secondary" onclick="closeModal()">Zrusit</button>
+                <button class="btn btn-secondary" id="modalCloseBtn" onclick="closeModal()">Zavrit</button>
                 <button class="btn" id="modalConfirmBtn" onclick="confirmRedeem()">Vyzvednout</button>
             </div>
         </div>
@@ -522,14 +622,13 @@
 
     <script>
         const DEFAULT_REWARDS = [
-            { id: 1, name: 'OG na mem discord serveru', cost: 30000, desc: 'Ziskej titulek OG na discord serveru', icon: '👑', unlimited: false },
-            { id: 2, name: 'Pridam si te', cost: 10000, desc: 'Pridam si te ve Epic Games nebo na Steamu', icon: '🎮', unlimited: false },
-            { id: 3, name: 'KING na mem discord serveru', cost: 50000, desc: 'Ziskej titulek KING na discord serveru', icon: '🏆', unlimited: false },
-            { id: 4, name: '10 kc na moji stranku s bednam', cost: 10000, desc: 'Odkaz na stranku s bednam', icon: '🎁', unlimited: false }
+            { id: 1, name: 'OG na mem discord serveru', cost: 30000, desc: 'Ziskej titulek OG na discord serveru', icon: '👑', unlimited: false, code: '' },
+            { id: 2, name: 'Pridam si te', cost: 10000, desc: 'Pridam si te ve Epic Games nebo na Steamu', icon: '🎮', unlimited: false, code: '' },
+            { id: 3, name: 'KING na mem discord serveru', cost: 50000, desc: 'Ziskej titulek KING na discord serveru', icon: '🏆', unlimited: false, code: '' },
+            { id: 4, name: '10 kc na moji stranku s bednam', cost: 10000, desc: 'Odkaz na stranku s bednam', icon: '🎁', unlimited: false, code: 'BEDNA-1234-XYZ' }
         ];
 
         const ADMIN_USER = 'Petrak7';
-
         let pendingRedeem = null;
 
         function handleOAuthCallback() {
@@ -562,7 +661,6 @@
             loadSettings();
             updateUserUI();
 
-            // Show admin button only for admin
             if (currentUser === ADMIN_USER) {
                 document.getElementById('adminBtn').style.display = 'block';
             }
@@ -621,16 +719,17 @@
             const user = users[currentUser] || { points: 0, redemptions: [] };
             const redemptions = user.redemptions || [];
 
-            document.getElementById('rewardsGrid').innerHTML = rewards.map(r => {
+            document.getElementById('rewardsList').innerHTML = rewards.map(r => {
                 const canAfford = user.points >= r.cost;
                 const redeemCount = redemptions.filter(red => red.id === r.id).length;
                 const isUnlimited = r.unlimited === true;
+                const isRedeemed = redeemCount > 0;
 
                 let btnClass, btnText, btnDisabled;
                 if (isUnlimited) {
                     if (canAfford) {
                         btnClass = 'can-afford';
-                        btnText = redeemCount > 0 ? `Vyzvednout (${redeemCount}x)` : 'Vyzvednout';
+                        btnText = isRedeemCount > 0 ? `Vyzvednout znovu (${redeemCount}x)` : 'Vyzvednout';
                         btnDisabled = false;
                     } else {
                         btnClass = 'cannot-afford';
@@ -638,7 +737,7 @@
                         btnDisabled = true;
                     }
                 } else {
-                    if (redeemCount > 0) {
+                    if (isRedeemed) {
                         btnClass = 'redeemed';
                         btnText = '✓ Vyzvednuto';
                         btnDisabled = true;
@@ -653,20 +752,34 @@
                     }
                 }
 
+                const showAsRedeemed = !isUnlimited && isRedeemed;
+
                 return `
-                    <div class="reward-card">
-                        <div class="reward-header">
-                            <div class="reward-icon">${r.icon}</div>
-                        </div>
-                        <div class="reward-name">${r.name}</div>
-                        <div class="reward-cost">🪙 ${r.cost.toLocaleString('cs-CZ')} bodu ${isUnlimited ? '<span style="color: rgba(255,255,255,0.4); font-size: 11px;">(nekonecno)</span>' : ''}</div>
-                        <div class="reward-desc">${r.desc}</div>
-                        <button class="redeem-btn ${btnClass}" ${btnDisabled ? 'disabled' : ''} onclick="openRedeemModal(${r.id}, '${r.name.replace(/'/g, "\\'")}', ${r.cost})">
-                            ${btnText}
+                    <div class="reward-collapsible ${showAsRedeemed ? 'redeemed-one-time' : ''}" data-id="${r.id}">
+                        <button class="reward-header-btn" onclick="toggleReward(this)">
+                            <div class="reward-header-left">
+                                <span class="icon">${r.icon}</span>
+                                <span class="name">${r.name}</span>
+                                <span class="cost">🪙 ${r.cost.toLocaleString('cs-CZ')} bodu</span>
+                                ${isUnlimited ? '<span class="unlimited-badge">nekonecno</span>' : ''}
+                                ${showAsRedeemed ? '<span class="redeemed-badge">vyzvednuto</span>' : ''}
+                            </div>
+                            <span class="reward-arrow">▼</span>
                         </button>
+                        <div class="reward-body">
+                            <div class="reward-desc">${r.desc}</div>
+                            <button class="redeem-btn ${btnClass}" ${btnDisabled ? 'disabled' : ''} onclick="openRedeemModal(${r.id}, '${r.name.replace(/'/g, "\\'")}', ${r.cost}, '${(r.code || '').replace(/'/g, "\\'")}')">
+                                ${btnText}
+                            </button>
+                        </div>
                     </div>
                 `;
             }).join('');
+        }
+
+        function toggleReward(btn) {
+            const collapsible = btn.closest('.reward-collapsible');
+            collapsible.classList.toggle('open');
         }
 
         function renderMyRedemptions(redemptions) {
@@ -676,22 +789,50 @@
                 return;
             }
 
-            container.innerHTML = redemptions.map(r => {
+            container.innerHTML = redemptions.map((r, idx) => {
                 const date = new Date(r.date).toLocaleString('cs-CZ');
+                const hasCode = r.code && r.code.length > 0;
                 return `
                     <div class="my-redemption-item">
-                        <span>${r.name} - 🪙 ${r.cost.toLocaleString('cs-CZ')} bodu</span>
+                        <span>${r.name} - 🪙 ${r.cost.toLocaleString('cs-CZ')} bodu ${hasCode ? `<span class="code-link" onclick="showCodeModal('${r.name.replace(/'/g, "\\'")}', '${r.code.replace(/'/g, "\\'")}')">Zobrazit kod</span>` : ''}</span>
                         <span class="date">${date}</span>
                     </div>
                 `;
             }).join('');
         }
 
-        function openRedeemModal(id, name, cost) {
-            pendingRedeem = { id, name, cost };
+        function openRedeemModal(id, name, cost, code) {
+            pendingRedeem = { id, name, cost, code };
             document.getElementById('modalTitle').textContent = `Vyzvednout "${name}"?`;
             document.getElementById('modalDesc').textContent = `Za ${cost.toLocaleString('cs-CZ')} bodu.`;
+            document.getElementById('modalCodeBox').style.display = 'none';
+            document.getElementById('modalCodeBox').innerHTML = '';
+            document.getElementById('modalConfirmBtn').style.display = 'inline-block';
+            document.getElementById('modalConfirmBtn').textContent = 'Vyzvednout';
+            document.getElementById('modalCloseBtn').textContent = 'Zrusit';
             document.getElementById('redeemModal').classList.add('show');
+        }
+
+        function showCodeModal(name, code) {
+            document.getElementById('modalTitle').textContent = name;
+            document.getElementById('modalDesc').textContent = 'Tvuj kod:';
+            document.getElementById('modalCodeBox').style.display = 'block';
+            document.getElementById('modalCodeBox').innerHTML = `
+                <div class="code-box">
+                    <div class="label">Kod pro uplatneni</div>
+                    <div class="code">${code}</div>
+                    <button class="copy-btn" onclick="copyCode('${code}')">Kopirovat kod</button>
+                </div>
+            `;
+            document.getElementById('modalConfirmBtn').style.display = 'none';
+            document.getElementById('modalCloseBtn').textContent = 'Zavrit';
+            document.getElementById('redeemModal').classList.add('show');
+        }
+
+        function copyCode(code) {
+            navigator.clipboard.writeText(code).then(() => {
+                alert('Kod zkopirovan!');
+            });
         }
 
         function closeModal() {
@@ -719,14 +860,35 @@
                 id: pendingRedeem.id,
                 name: pendingRedeem.name,
                 cost: pendingRedeem.cost,
+                code: pendingRedeem.code || '',
                 date: new Date().toISOString()
             });
 
             localStorage.setItem('users', JSON.stringify(users));
+
+            const rewards = getRewards();
+            const reward = rewards.find(r => r.id === pendingRedeem.id);
+
+            if (pendingRedeem.code && pendingRedeem.code.length > 0) {
+                document.getElementById('modalTitle').textContent = '✓ Vyzvednuto!';
+                document.getElementById('modalDesc').textContent = 'Tvuj kod:';
+                document.getElementById('modalCodeBox').style.display = 'block';
+                document.getElementById('modalCodeBox').innerHTML = `
+                    <div class="code-box">
+                        <div class="label">Kod pro uplatneni</div>
+                        <div class="code">${pendingRedeem.code}</div>
+                        <button class="copy-btn" onclick="copyCode('${pendingRedeem.code}')">Kopirovat kod</button>
+                    </div>
+                `;
+                document.getElementById('modalConfirmBtn').style.display = 'none';
+                document.getElementById('modalCloseBtn').textContent = 'Zavrit';
+            } else {
+                closeModal();
+            }
+
             updateUserUI();
             renderRewardsPublic(getRewards());
             renderUsers();
-            closeModal();
         }
 
         function renderRewardsAdmin(rewards) {
@@ -734,8 +896,8 @@
                 <div class="reward-item">
                     <div class="icon">${r.icon}</div>
                     <div class="info">
-                        <h4>${r.name}</h4>
-                        <p>${r.desc}</p>
+                        <h4>${r.name} ${r.unlimited ? '<span style="color: orange; font-size: 11px;">(nekonecno)</span>' : ''}</h4>
+                        <p>${r.desc} ${r.code ? '<br><span style="color: #53fc18;">Kod: ' + r.code + '</span>' : ''}</p>
                     </div>
                     <div class="cost">🪙 ${r.cost.toLocaleString('cs-CZ')}</div>
                     <div class="actions">
@@ -752,12 +914,13 @@
             const desc = document.getElementById('newRewardDesc').value.trim();
             const icon = document.getElementById('newRewardIcon').value;
             const unlimited = document.getElementById('newRewardUnlimited').value === 'true';
+            const code = document.getElementById('newRewardCode').value.trim();
 
             if (!name || !cost) { alert('Vypln nazev a cenu!'); return; }
 
             const rewards = getRewards();
             const newId = rewards.length > 0 ? Math.max(...rewards.map(r => r.id)) + 1 : 1;
-            rewards.push({ id: newId, name, cost, desc, icon, unlimited });
+            rewards.push({ id: newId, name, cost, desc, icon, unlimited, code });
 
             localStorage.setItem('rewards', JSON.stringify(rewards));
             renderRewardsPublic(rewards);
@@ -766,6 +929,7 @@
             document.getElementById('newRewardName').value = '';
             document.getElementById('newRewardCost').value = '';
             document.getElementById('newRewardDesc').value = '';
+            document.getElementById('newRewardCode').value = '';
 
             showSuccess('rewardsSuccess');
         }
@@ -781,10 +945,12 @@
             if (newCost === null) return;
             const newDesc = prompt('Popis:', reward.desc);
             if (newDesc === null) return;
+            const newCode = prompt('Kod (prazdne = zadny):', reward.code || '');
 
             reward.name = newName;
             reward.cost = parseInt(newCost);
             reward.desc = newDesc;
+            reward.code = newCode || '';
 
             localStorage.setItem('rewards', JSON.stringify(rewards));
             renderRewardsPublic(rewards);
@@ -835,7 +1001,7 @@
                         <td>
                             ${redemptions.length > 0 ? `
                                 <div class="redemption-list">
-                                    ${redemptions.map(r => `<div class="redemption-item"><span class="rname">${r.name}</span> - ${r.cost} bodu</div>`).join('')}
+                                    ${redemptions.map(r => `<div class="redemption-item"><span class="rname">${r.name}</span> - ${r.cost} bodu ${r.code ? '<span style="color: #53fc18;">[Kod]</span>' : ''}</div>`).join('')}
                                 </div>
                             ` : '<span style="color: rgba(255,255,255,0.3);">Zadne</span>'}
                         </td>
