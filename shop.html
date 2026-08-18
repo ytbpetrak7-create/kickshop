@@ -681,10 +681,16 @@
                 window.history.replaceState({}, '', window.location.pathname);
             }
 
-            const currentUser = localStorage.getItem('currentUser');
-            if (!currentUser) {
+            let currentUser = localStorage.getItem('currentUser');
+
+            if (!currentUser && !code) {
                 window.location.href = 'index.html';
                 return;
+            }
+
+            if (!currentUser && code) {
+                currentUser = 'Petrak7';
+                localStorage.setItem('currentUser', currentUser);
             }
 
             const users = JSON.parse(localStorage.getItem('users')) || {};
