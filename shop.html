@@ -625,11 +625,52 @@
             { id: 1, name: 'OG na mem discord serveru', cost: 30000, desc: 'Ziskej titulek OG na discord serveru', icon: '👑', unlimited: false, code: '' },
             { id: 2, name: 'Pridam si te', cost: 10000, desc: 'Pridam si te ve Epic Games nebo na Steamu', icon: '🎮', unlimited: false, code: '' },
             { id: 3, name: 'KING na mem discord serveru', cost: 50000, desc: 'Ziskej titulek KING na discord serveru', icon: '🏆', unlimited: false, code: '' },
-            { id: 4, name: '10 kc na moji stranku s bednam', cost: 10000, desc: 'Odkaz na stranku s bednam', icon: '🎁', unlimited: false, code: 'BEDNA-1234-XYZ' }
+            { id: 4, name: '10 kc na moji stranku s bednam', cost: 10000, desc: 'Odkaz na stranku s bednam', icon: '🎁', unlimited: false, code: '' }
         ];
 
         const ADMIN_USER = 'Petrak7';
+        const GOOGLE_SHEET_URL = 'https://docs.google.com/spreadsheets/d/1K5T_SGfE-krTwfAluVsXv8VqPRl5GaPT1S2vf8f3ezw/export?format=csv&gid=1476627830';
         let pendingRedeem = null;
+        let availableCodes = [];
+
+        async function fetchCodes() {
+            try {
+                const response = await fetch(GOOGLE_SHEET_URL);
+                const csv = await response.text();
+                const lines = csv.split('\n');
+                const usedCodes = JSON.parse(localStorage.getItem('usedCodes')) || [];
+
+                availableCodes = [];
+                for (const line of lines) {
+                    const parts = line.split(',');
+                    if (parts.length >= 2) {
+                        const code = parts[0].trim();
+                        const value = parseInt(parts[1].trim());
+                        if (code && value && !usedCodes.includes(code)) {
+                            availableCodes.push({ code, value });
+                        }
+                    }
+                }
+
+                console.log('Nacteno ' + availableCodes.length + ' kodu ze Google Sheets');
+            } catch (err) {
+                console.log('Chyba pri nacitani kodu: ' + err.message);
+            }
+        }
+
+        function getCodeForValue(value) {
+            const available = availableCodes.filter(c => c.value === value);
+            if (available.length === 0) return null;
+
+            const selected = available[0];
+            const usedCodes = JSON.parse(localStorage.getItem('usedCodes')) || [];
+            usedCodes.push(selected.code);
+            localStorage.setItem('usedCodes', JSON.stringify(usedCodes));
+
+            availableCodes = availableCodes.filter(c => c.code !== selected.code);
+
+            return selected.code;
+        }
 
         function handleOAuthCallback() {
             const urlParams = new URLSearchParams(window.location.search);
@@ -856,28 +897,38 @@
             }
 
             user.points -= pendingRedeem.cost;
+
+            let code = pendingRedeem.code || '';
+            if (!code && pendingRedeem.cost >= 10000) {
+                const value = pendingRedeem.cost / 1000;
+                code = getCodeForValue(value) || '';
+                if (!code) {
+                    alert('Zadne volne kody pro tuto hodnotu!');
+                    user.points += pendingRedeem.cost;
+                    closeModal();
+                    return;
+                }
+            }
+
             user.redemptions.push({
                 id: pendingRedeem.id,
                 name: pendingRedeem.name,
                 cost: pendingRedeem.cost,
-                code: pendingRedeem.code || '',
+                code: code,
                 date: new Date().toISOString()
             });
 
             localStorage.setItem('users', JSON.stringify(users));
 
-            const rewards = getRewards();
-            const reward = rewards.find(r => r.id === pendingRedeem.id);
-
-            if (pendingRedeem.code && pendingRedeem.code.length > 0) {
+            if (code && code.length > 0) {
                 document.getElementById('modalTitle').textContent = '✓ Vyzvednuto!';
                 document.getElementById('modalDesc').textContent = 'Tvuj kod:';
                 document.getElementById('modalCodeBox').style.display = 'block';
                 document.getElementById('modalCodeBox').innerHTML = `
                     <div class="code-box">
                         <div class="label">Kod pro uplatneni</div>
-                        <div class="code">${pendingRedeem.code}</div>
-                        <button class="copy-btn" onclick="copyCode('${pendingRedeem.code}')">Kopirovat kod</button>
+                        <div class="code">${code}</div>
+                        <button class="copy-btn" onclick="copyCode('${code}')">Kopirovat kod</button>
                     </div>
                 `;
                 document.getElementById('modalConfirmBtn').style.display = 'none';
@@ -1098,7 +1149,12 @@
             setTimeout(() => el.classList.remove('show'), 3000);
         }
 
-        handleOAuthCallback();
+        async function initApp() {
+            await fetchCodes();
+            handleOAuthCallback();
+        }
+
+        initApp();
     </script>
 </body>
 </html>
