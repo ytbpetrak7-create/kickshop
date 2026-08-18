@@ -3,13 +3,9 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Kick Shop - Nastaveni bodu</title>
+    <title>Kick Shop - Nastaveni</title>
     <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
+        * { margin: 0; padding: 0; box-sizing: border-box; }
 
         body {
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
@@ -19,48 +15,26 @@
             padding: 40px 20px;
         }
 
-        .container {
-            max-width: 800px;
-            margin: 0 auto;
-        }
+        .container { max-width: 900px; margin: 0 auto; }
 
-        .header {
-            text-align: center;
-            margin-bottom: 40px;
-        }
+        .header { text-align: center; margin-bottom: 40px; }
+        .logo { font-size: 36px; margin-bottom: 10px; }
+        h1 { color: #53fc18; font-size: 32px; margin-bottom: 8px; }
+        .subtitle { color: rgba(255,255,255,0.6); font-size: 14px; }
 
-        .logo {
-            font-size: 36px;
-            margin-bottom: 10px;
-        }
-
-        h1 {
-            color: #53fc18;
-            font-size: 32px;
-            margin-bottom: 8px;
-        }
-
-        .subtitle {
-            color: rgba(255, 255, 255, 0.6);
-            font-size: 14px;
-        }
-
-        .settings-panel {
-            background: rgba(255, 255, 255, 0.05);
+        .section {
+            background: rgba(255,255,255,0.05);
             backdrop-filter: blur(10px);
             border-radius: 16px;
             padding: 30px;
-            margin-bottom: 30px;
-            border: 1px solid rgba(255, 255, 255, 0.1);
+            margin-bottom: 25px;
+            border: 1px solid rgba(255,255,255,0.1);
         }
 
-        .settings-panel h2 {
+        .section h2 {
             color: #53fc18;
             font-size: 20px;
             margin-bottom: 20px;
-            display: flex;
-            align-items: center;
-            gap: 10px;
         }
 
         .setting-row {
@@ -68,26 +42,13 @@
             justify-content: space-between;
             align-items: center;
             padding: 15px 0;
-            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+            border-bottom: 1px solid rgba(255,255,255,0.1);
         }
 
-        .setting-row:last-child {
-            border-bottom: none;
-        }
+        .setting-row:last-child { border-bottom: none; }
 
-        .setting-label {
-            flex: 1;
-        }
-
-        .setting-label h4 {
-            font-size: 16px;
-            margin-bottom: 4px;
-        }
-
-        .setting-label p {
-            color: rgba(255, 255, 255, 0.5);
-            font-size: 13px;
-        }
+        .setting-label h4 { font-size: 16px; margin-bottom: 4px; }
+        .setting-label p { color: rgba(255,255,255,0.5); font-size: 13px; }
 
         .setting-input {
             display: flex;
@@ -98,184 +59,110 @@
         .setting-input input {
             width: 80px;
             padding: 10px 15px;
-            border: 1px solid rgba(255, 255, 255, 0.2);
+            border: 1px solid rgba(255,255,255,0.2);
             border-radius: 8px;
-            background: rgba(255, 255, 255, 0.05);
+            background: rgba(255,255,255,0.05);
             color: #fff;
             font-size: 16px;
             text-align: center;
         }
 
-        .setting-input input:focus {
-            outline: none;
-            border-color: #53fc18;
-        }
+        .setting-input input:focus { outline: none; border-color: #53fc18; }
+        .setting-input span { color: rgba(255,255,255,0.5); font-size: 14px; }
 
-        .setting-input span {
-            color: rgba(255, 255, 255, 0.5);
-            font-size: 14px;
-        }
-
-        .save-btn {
+        .btn {
             background: #53fc18;
             color: #000;
             border: none;
-            padding: 12px 30px;
+            padding: 12px 24px;
             border-radius: 10px;
-            font-size: 16px;
+            font-size: 14px;
             font-weight: 600;
             cursor: pointer;
-            margin-top: 20px;
             transition: all 0.3s ease;
         }
 
-        .save-btn:hover {
-            background: #45e012;
-            transform: translateY(-2px);
+        .btn:hover { background: #45e012; transform: translateY(-2px); }
+
+        .btn-secondary {
+            background: rgba(255,255,255,0.1);
+            color: #fff;
+            border: 1px solid rgba(255,255,255,0.2);
         }
 
-        .preview-box {
-            background: rgba(83, 252, 24, 0.1);
-            border: 1px solid rgba(83, 252, 24, 0.3);
-            border-radius: 12px;
-            padding: 20px;
+        .btn-secondary:hover { background: rgba(255,255,255,0.15); }
+
+        .btn-danger {
+            background: #ff4757;
+            color: #fff;
+        }
+
+        .btn-danger:hover { background: #ff3344; }
+
+        .btn-small { padding: 8px 16px; font-size: 12px; }
+
+        .rewards-list { margin-top: 20px; }
+
+        .reward-item {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            padding: 15px;
+            background: rgba(255,255,255,0.03);
+            border-radius: 10px;
+            margin-bottom: 10px;
+            border: 1px solid rgba(255,255,255,0.05);
+        }
+
+        .reward-icon { font-size: 24px; }
+
+        .reward-info { flex: 1; }
+        .reward-info h4 { font-size: 14px; margin-bottom: 4px; }
+        .reward-info p { color: rgba(255,255,255,0.5); font-size: 12px; }
+
+        .reward-cost { color: #53fc18; font-weight: 600; font-size: 14px; }
+
+        .reward-actions { display: flex; gap: 8px; }
+
+        .add-reward-form {
             margin-top: 20px;
-        }
-
-        .preview-box h4 {
-            color: #53fc18;
-            margin-bottom: 10px;
-        }
-
-        .preview-value {
-            font-size: 24px;
-            font-weight: 700;
-            color: #53fc18;
-        }
-
-        .info-box {
-            background: rgba(255, 255, 255, 0.05);
-            backdrop-filter: blur(10px);
-            border-radius: 16px;
-            padding: 25px 30px;
-            margin-bottom: 25px;
-            border: 1px solid rgba(255, 255, 255, 0.1);
-        }
-
-        .info-box h3 {
-            color: #53fc18;
-            font-size: 18px;
-            margin-bottom: 15px;
-            display: flex;
-            align-items: center;
-            gap: 10px;
-        }
-
-        .command {
-            background: rgba(83, 252, 24, 0.1);
-            border: 1px solid rgba(83, 252, 24, 0.3);
-            border-radius: 10px;
-            padding: 15px 20px;
-            margin-bottom: 10px;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-        }
-
-        .command:last-child {
-            margin-bottom: 0;
-        }
-
-        .command-name {
-            font-family: monospace;
-            font-size: 16px;
-            color: #53fc18;
-            font-weight: 600;
-        }
-
-        .command-desc {
-            color: rgba(255, 255, 255, 0.7);
-            font-size: 14px;
-        }
-
-        .rewards-section {
-            margin-bottom: 30px;
-        }
-
-        .section-title {
-            font-size: 20px;
-            margin-bottom: 20px;
-            display: flex;
-            align-items: center;
-            gap: 10px;
-        }
-
-        .section-title span {
-            color: #53fc18;
-        }
-
-        .rewards-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
-            gap: 20px;
-        }
-
-        .reward-card {
-            background: rgba(255, 255, 255, 0.05);
-            backdrop-filter: blur(10px);
-            border-radius: 16px;
-            padding: 25px;
-            border: 1px solid rgba(255, 255, 255, 0.1);
-        }
-
-        .reward-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: flex-start;
-            margin-bottom: 15px;
-        }
-
-        .reward-icon {
-            font-size: 32px;
-        }
-
-        .reward-name {
-            font-size: 16px;
-            font-weight: 600;
-            margin-bottom: 8px;
-        }
-
-        .reward-cost {
-            color: #53fc18;
-            font-size: 14px;
-            font-weight: 600;
-            margin-bottom: 10px;
-        }
-
-        .reward-desc {
-            color: rgba(255, 255, 255, 0.6);
-            font-size: 13px;
-            line-height: 1.4;
-        }
-
-        .footer {
-            text-align: center;
-            margin-top: 30px;
             padding: 20px;
-            background: rgba(255, 255, 255, 0.05);
+            background: rgba(255,255,255,0.03);
             border-radius: 10px;
-            color: rgba(255, 255, 255, 0.5);
-            font-size: 12px;
+            border: 1px dashed rgba(255,255,255,0.2);
         }
 
-        .footer a {
-            color: #53fc18;
-            text-decoration: none;
+        .add-reward-form h4 { margin-bottom: 15px; }
+
+        .form-row {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 10px;
+        }
+
+        .form-row input, .form-row select {
+            flex: 1;
+            padding: 10px 15px;
+            border: 1px solid rgba(255,255,255,0.2);
+            border-radius: 8px;
+            background: rgba(255,255,255,0.05);
+            color: #fff;
+            font-size: 14px;
+        }
+
+        .form-row input:focus, .form-row select:focus { outline: none; border-color: #53fc18; }
+
+        .form-row select option { background: #1a1a2e; }
+
+        .actions-bar {
+            display: flex;
+            gap: 10px;
+            margin-top: 20px;
         }
 
         .success-msg {
             display: none;
-            background: rgba(83, 252, 24, 0.2);
+            background: rgba(83,252,24,0.2);
             border: 1px solid #53fc18;
             border-radius: 10px;
             padding: 15px;
@@ -284,45 +171,56 @@
             text-align: center;
         }
 
-        .success-msg.show {
-            display: block;
+        .success-msg.show { display: block; }
+
+        .footer {
+            text-align: center;
+            margin-top: 30px;
+            padding: 20px;
+            background: rgba(255,255,255,0.05);
+            border-radius: 10px;
+            color: rgba(255,255,255,0.5);
+            font-size: 12px;
         }
 
-        .toggle-settings {
-            background: rgba(255, 255, 255, 0.1);
-            border: 1px solid rgba(255, 255, 255, 0.2);
-            color: #fff;
-            padding: 10px 20px;
+        .footer a { color: #53fc18; text-decoration: none; }
+
+        .icon-options {
+            display: flex;
+            gap: 8px;
+            flex-wrap: wrap;
+            margin-top: 5px;
+        }
+
+        .icon-option {
+            width: 36px;
+            height: 36px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: rgba(255,255,255,0.05);
+            border: 2px solid transparent;
             border-radius: 8px;
             cursor: pointer;
-            margin-bottom: 20px;
-            font-size: 14px;
+            font-size: 18px;
+            transition: all 0.2s;
         }
 
-        .toggle-settings:hover {
-            background: rgba(255, 255, 255, 0.15);
-        }
-
-        .hidden {
-            display: none;
-        }
+        .icon-option:hover { border-color: rgba(255,255,255,0.3); }
+        .icon-option.selected { border-color: #53fc18; background: rgba(83,252,24,0.1); }
     </style>
 </head>
 <body>
     <div class="container">
         <div class="header">
             <div class="logo">🎮</div>
-            <h1>Kick Shop - Nastaveni bodu</h1>
-            <p class="subtitle">Nastav kolik bodu divaci dostavaji za sledovani</p>
+            <h1>Kick Shop - Nastaveni</h1>
+            <p class="subtitle">Nastav body a odmeny pro sve divaky</p>
         </div>
 
-        <button class="toggle-settings" onclick="toggleSettings()">
-            ⚙️ Nastaveni pro streamera
-        </button>
-
-        <div id="settingsPanel" class="settings-panel hidden">
+        <div class="section">
             <h2>⚙️ Nastaveni bodu</h2>
-            
+
             <div class="setting-row">
                 <div class="setting-label">
                     <h4>Body za minutu sledovani</h4>
@@ -348,10 +246,10 @@
             <div class="setting-row">
                 <div class="setting-label">
                     <h4>Body za follow</h4>
-                    <p>Kolik bodu divak dostane za follow</p>
+                    <p>Jednorazove body za follow (1 = zabrani zneuziti)</p>
                 </div>
                 <div class="setting-input">
-                    <input type="number" id="pointsPerFollow" value="1" min="1" max="1000">
+                    <input type="number" id="pointsPerFollow" value="1" min="1" max="100">
                     <span>bodu</span>
                 </div>
             </div>
@@ -367,126 +265,254 @@
                 </div>
             </div>
 
-            <button class="save-btn" onclick="saveSettings()">Ulozit nastaveni</button>
-            <div id="successMsg" class="success-msg">Nastaveni bylo ulozeno!</div>
-
-            <div class="preview-box">
-                <h4>📊 Aktualni nastaveni</h4>
-                <div class="preview-value" id="previewText">10 bodu za minutu sledovani</div>
+            <div class="actions-bar">
+                <button class="btn" onclick="savePointsSettings()">Ulozit nastaveni bodu</button>
             </div>
+            <div id="pointsSuccess" class="success-msg">Nastaveni bodu ulozeno!</div>
         </div>
 
-        <div class="info-box">
-            <h3>📍 Jak zjistit svuj zustatek?</h3>
-            <div class="command">
-                <span class="command-name">!points</span>
-                <span class="command-desc">Zobrazi tvuj aktualni zustatek bodu</span>
+        <div class="section">
+            <h2>🎁 Sprava odmen</h2>
+
+            <div id="rewardsList" class="rewards-list"></div>
+
+            <div class="add-reward-form">
+                <h4>➕ Pridat novou odmenu</h4>
+                <div class="form-row">
+                    <input type="text" id="newRewardName" placeholder="Nazev odmeny">
+                    <input type="number" id="newRewardCost" placeholder="Cena v bodech" min="1">
+                </div>
+                <div class="form-row">
+                    <input type="text" id="newRewardDesc" placeholder="Popis odmeny">
+                </div>
+                <div class="form-row">
+                    <select id="newRewardIcon">
+                        <option value="🎁">🎁 Dark</option>
+                        <option value="👑">👑 Koruna</option>
+                        <option value="🏆">🏆 Trofej</option>
+                        <option value="🎮">🎮 Hra</option>
+                        <option value="⭐">⭐ Hvezda</option>
+                        <option value="💎">💎 Diamant</option>
+                        <option value="🔥"> khỏ Ohen</option>
+                        <option value="👕">👕 Merch</option>
+                        <option value="💬">💬 Chat</option>
+                        <option value="🎯">🎯 Cil</option>
+                        <option value="🎵">🎵 Hudba</option>
+                        <option value="🖼️">🖼️ Obraz</option>
+                        <option value="⚡">⚡ Energy</option>
+                        <option value="🚀">🚀 Raketa</option>
+                        <option value="💰">💰 Penize</option>
+                    </select>
+                    <button class="btn" onclick="addReward()">Pridat</button>
+                </div>
             </div>
-            <div class="command">
-                <span class="command-name">!level</span>
-                <span class="command-desc">Zobrazi tvoji uroven</span>
-            </div>
-            <div class="command">
-                <span class="command-name">!top</span>
-                <span class="command-desc">Zobrazi leaderboard hracu</span>
-            </div>
+            <div id="rewardsSuccess" class="success-msg">Odmena pridana!</div>
         </div>
 
-        <div class="rewards-section">
-            <h2 class="section-title"><span>🎁</span> Dostupne odmeny</h2>
-            <div class="rewards-grid">
-                <div class="reward-card">
-                    <div class="reward-header">
-                        <div class="reward-icon">👑</div>
-                    </div>
-                    <div class="reward-name">OG na mem discord serveru</div>
-                    <div class="reward-cost">🪙 30,000 bodu</div>
-                    <div class="reward-desc">Ziskej titulek OG na discord serveru</div>
-                </div>
-
-                <div class="reward-card">
-                    <div class="reward-header">
-                        <div class="reward-icon">🎮</div>
-                    </div>
-                    <div class="reward-name">Pridam si te</div>
-                    <div class="reward-cost">🪙 10,000 bodu</div>
-                    <div class="reward-desc">Pridam si te ve Epic Games nebo na Steamu</div>
-                </div>
-
-                <div class="reward-card">
-                    <div class="reward-header">
-                        <div class="reward-icon">🏆</div>
-                    </div>
-                    <div class="reward-name">KING na mem discord serveru</div>
-                    <div class="reward-cost">🪙 50,000 bodu</div>
-                    <div class="reward-desc">Ziskej titulek KING na discord serveru</div>
-                </div>
-
-                <div class="reward-card">
-                    <div class="reward-header">
-                        <div class="reward-icon">🎁</div>
-                    </div>
-                    <div class="reward-name">10 kc na moji stranku s bednam</div>
-                    <div class="reward-cost">🪙 1,000 bodu</div>
-                    <div class="reward-desc">Odkaz na stranku s bednam</div>
-                </div>
+        <div class="section">
+            <h2>📤 Export / Import nastaveni</h2>
+            <p style="color: rgba(255,255,255,0.5); font-size: 13px; margin-bottom: 15px;">
+                Zalohuj sve nastaveni nebo ho prenes na jine zarizeni
+            </p>
+            <div class="actions-bar">
+                <button class="btn btn-secondary" onclick="exportSettings()">Exportovat (JSON)</button>
+                <button class="btn btn-secondary" onclick="document.getElementById('importFile').click()">Importovat</button>
+                <input type="file" id="importFile" accept=".json" style="display:none" onchange="importSettings(event)">
+                <button class="btn btn-danger btn-small" onclick="resetSettings()">Resetovat vse</button>
             </div>
         </div>
 
         <div class="footer">
-            Spravovano pres <a href="https://botrix.live" target="_blank">BotRix</a> | 
+            Spravovano pres <a href="https://botrix.live" target="_blank">BotRix</a> |
             Nastaveni se uklada v prohlizeci
         </div>
     </div>
 
     <script>
-        // Nacti ulozena nastaveni
+        const DEFAULT_REWARDS = [
+            { id: 1, name: 'OG na mem discord serveru', cost: 30000, desc: 'Ziskej titulek OG na discord serveru', icon: '👑' },
+            { id: 2, name: 'Pridam si te', cost: 10000, desc: 'Pridam si te ve Epic Games nebo na Steamu', icon: '🎮' },
+            { id: 3, name: 'KING na mem discord serveru', cost: 50000, desc: 'Ziskej titulek KING na discord serveru', icon: '🏆' },
+            { id: 4, name: '10 kc na moji stranku s bednam', cost: 10000, desc: 'Odkaz na stranku s bednam', icon: '🎁' }
+        ];
+
         function loadSettings() {
-            const settings = {
-                pointsPerMinute: localStorage.getItem('pointsPerMinute') || 10,
-                pointsPerMessage: localStorage.getItem('pointsPerMessage') || 5,
-                pointsPerFollow: localStorage.getItem('pointsPerFollow') || 1,
-                pointsPerSub: localStorage.getItem('pointsPerSub') || 500
+            const points = {
+                perMinute: parseInt(localStorage.getItem('pointsPerMinute')) || 10,
+                perMessage: parseInt(localStorage.getItem('pointsPerMessage')) || 5,
+                perFollow: parseInt(localStorage.getItem('pointsPerFollow')) || 1,
+                perSub: parseInt(localStorage.getItem('pointsPerSub')) || 500
             };
-            
-            document.getElementById('pointsPerMinute').value = settings.pointsPerMinute;
-            document.getElementById('pointsPerMessage').value = settings.pointsPerMessage;
-            document.getElementById('pointsPerFollow').value = settings.pointsPerFollow;
-            document.getElementById('pointsPerSub').value = settings.pointsPerSub;
-            
-            updatePreview();
+
+            document.getElementById('pointsPerMinute').value = points.perMinute;
+            document.getElementById('pointsPerMessage').value = points.perMessage;
+            document.getElementById('pointsPerFollow').value = points.perFollow;
+            document.getElementById('pointsPerSub').value = points.perSub;
+
+            let rewards = JSON.parse(localStorage.getItem('rewards'));
+            if (!rewards) {
+                rewards = DEFAULT_REWARDS;
+                localStorage.setItem('rewards', JSON.stringify(rewards));
+            }
+            renderRewards(rewards);
         }
 
-        // Uloz nastaveni
-        function saveSettings() {
+        function savePointsSettings() {
             localStorage.setItem('pointsPerMinute', document.getElementById('pointsPerMinute').value);
             localStorage.setItem('pointsPerMessage', document.getElementById('pointsPerMessage').value);
             localStorage.setItem('pointsPerFollow', document.getElementById('pointsPerFollow').value);
             localStorage.setItem('pointsPerSub', document.getElementById('pointsPerSub').value);
-            
-            updatePreview();
-            
-            const msg = document.getElementById('successMsg');
-            msg.classList.add('show');
-            setTimeout(() => msg.classList.remove('show'), 3000);
+            showSuccess('pointsSuccess');
         }
 
-        // Aktualizuj preview
-        function updatePreview() {
-            const ppm = document.getElementById('pointsPerMinute').value;
-            document.getElementById('previewText').textContent = `${ppm} bodu za minutu sledovani`;
+        function getRewards() {
+            return JSON.parse(localStorage.getItem('rewards')) || DEFAULT_REWARDS;
         }
 
-        // Toggle settings panel
-        function toggleSettings() {
-            const panel = document.getElementById('settingsPanel');
-            panel.classList.toggle('hidden');
+        function renderRewards(rewards) {
+            const list = document.getElementById('rewardsList');
+            list.innerHTML = rewards.map(r => `
+                <div class="reward-item">
+                    <div class="reward-icon">${r.icon}</div>
+                    <div class="reward-info">
+                        <h4>${r.name}</h4>
+                        <p>${r.desc}</p>
+                    </div>
+                    <div class="reward-cost">🪙 ${r.cost.toLocaleString('cs-CZ')}</div>
+                    <div class="reward-actions">
+                        <button class="btn btn-secondary btn-small" onclick="editReward(${r.id})">Upravit</button>
+                        <button class="btn btn-danger btn-small" onclick="deleteReward(${r.id})">Smazat</button>
+                    </div>
+                </div>
+            `).join('');
         }
 
-        // Event listeners
-        document.getElementById('pointsPerMinute').addEventListener('input', updatePreview);
+        function addReward() {
+            const name = document.getElementById('newRewardName').value.trim();
+            const cost = parseInt(document.getElementById('newRewardCost').value);
+            const desc = document.getElementById('newRewardDesc').value.trim();
+            const icon = document.getElementById('newRewardIcon').value;
 
-        // Nacti pri nacteni stranky
+            if (!name || !cost) {
+                alert('Vypln nazev a cenu!');
+                return;
+            }
+
+            const rewards = getRewards();
+            const newId = rewards.length > 0 ? Math.max(...rewards.map(r => r.id)) + 1 : 1;
+            rewards.push({ id: newId, name, cost, desc, icon });
+
+            localStorage.setItem('rewards', JSON.stringify(rewards));
+            renderRewards(rewards);
+
+            document.getElementById('newRewardName').value = '';
+            document.getElementById('newRewardCost').value = '';
+            document.getElementById('newRewardDesc').value = '';
+
+            showSuccess('rewardsSuccess');
+        }
+
+        function editReward(id) {
+            const rewards = getRewards();
+            const reward = rewards.find(r => r.id === id);
+            if (!reward) return;
+
+            const newName = prompt('Nazev odmeny:', reward.name);
+            if (newName === null) return;
+
+            const newCost = prompt('Cena v bodech:', reward.cost);
+            if (newCost === null) return;
+
+            const newDesc = prompt('Popis:', reward.desc);
+            if (newDesc === null) return;
+
+            reward.name = newName;
+            reward.cost = parseInt(newCost);
+            reward.desc = newDesc;
+
+            localStorage.setItem('rewards', JSON.stringify(rewards));
+            renderRewards(rewards);
+        }
+
+        function deleteReward(id) {
+            if (!confirm('Opravdu smazat tuto odmenu?')) return;
+
+            let rewards = getRewards();
+            rewards = rewards.filter(r => r.id !== id);
+
+            localStorage.setItem('rewards', JSON.stringify(rewards));
+            renderRewards(rewards);
+        }
+
+        function exportSettings() {
+            const data = {
+                points: {
+                    perMinute: document.getElementById('pointsPerMinute').value,
+                    perMessage: document.getElementById('pointsPerMessage').value,
+                    perFollow: document.getElementById('pointsPerFollow').value,
+                    perSub: document.getElementById('pointsPerSub').value
+                },
+                rewards: getRewards()
+            };
+
+            const blob = new Blob([JSON.stringify(data, null, 2)], { type: 'application/json' });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = 'kickshop-settings.json';
+            a.click();
+            URL.revokeObjectURL(url);
+        }
+
+        function importSettings(event) {
+            const file = event.target.files[0];
+            if (!file) return;
+
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                try {
+                    const data = JSON.parse(e.target.result);
+
+                    if (data.points) {
+                        localStorage.setItem('pointsPerMinute', data.points.perMinute);
+                        localStorage.setItem('pointsPerMessage', data.points.perMessage);
+                        localStorage.setItem('pointsPerFollow', data.points.perFollow);
+                        localStorage.setItem('pointsPerSub', data.points.perSub);
+                    }
+
+                    if (data.rewards) {
+                        localStorage.setItem('rewards', JSON.stringify(data.rewards));
+                    }
+
+                    loadSettings();
+                    alert('Nastaveni importovano!');
+                } catch (err) {
+                    alert('Chyba pri importu: ' + err.message);
+                }
+            };
+            reader.readAsText(file);
+            event.target.value = '';
+        }
+
+        function resetSettings() {
+            if (!confirm('Opravdu resetovat vsechno nastaveni?')) return;
+
+            localStorage.removeItem('pointsPerMinute');
+            localStorage.removeItem('pointsPerMessage');
+            localStorage.removeItem('pointsPerFollow');
+            localStorage.removeItem('pointsPerSub');
+            localStorage.removeItem('rewards');
+
+            loadSettings();
+            alert('Nastaveni resetovano!');
+        }
+
+        function showSuccess(id) {
+            const el = document.getElementById(id);
+            el.classList.add('show');
+            setTimeout(() => el.classList.remove('show'), 3000);
+        }
+
         loadSettings();
     </script>
 </body>
