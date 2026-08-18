@@ -445,7 +445,7 @@
             <p class="subtitle">Vymen body za odmeny</p>
         </div>
 
-        <div class="user-bar">
+        <div class="user-bar" id="userBar">
             <div class="user-info">
                 <div class="avatar">👤</div>
                 <div class="name" id="displayName">Nacitani...</div>
@@ -677,22 +677,32 @@
         function handleOAuthCallback() {
             const urlParams = new URLSearchParams(window.location.search);
             const code = urlParams.get('code');
+            const state = urlParams.get('state');
+            const error = urlParams.get('error');
+
+            console.log('OAuth callback - code:', code, 'state:', state, 'error:', error);
+            console.log('URL:', window.location.href);
+
+            if (error) {
+                console.log('OAuth error:', error);
+                alert('Chyba prihlaseni: ' + error);
+            }
 
             if (code) {
+                console.log('Code found, setting user to Petrk7');
                 localStorage.setItem('currentUser', 'Petrak7');
                 window.history.replaceState({}, '', window.location.pathname);
             }
 
-            let currentUser = localStorage.getItem('currentUser');
+            const currentUser = localStorage.getItem('currentUser');
+            console.log('Current user from localStorage:', currentUser);
 
-            if (!currentUser && !code) {
-                window.location.href = 'index.html';
+            if (!currentUser) {
+                console.log('No user found, showing login prompt');
+                document.getElementById('userBar').innerHTML = `
+                    <a href="index.html" style="color:#53fc18;text-decoration:none;font-weight:600;">Prihlasit se</a>
+                `;
                 return;
-            }
-
-            if (!currentUser && code) {
-                currentUser = 'Petrak7';
-                localStorage.setItem('currentUser', currentUser);
             }
 
             const users = JSON.parse(localStorage.getItem('users')) || {};
@@ -1151,16 +1161,8 @@
             setTimeout(() => el.classList.remove('show'), 3000);
         }
 
-        async function initApp() {
-            try {
-                await fetchCodes();
-            } catch (e) {
-                console.log('Chyba pri nacitani kodu, pokracuji bez nich');
-            }
-            handleOAuthCallback();
-        }
-
-        initApp();
+        handleOAuthCallback();
+        fetchCodes().catch(e => console.log('Kody se nepodarilo nacist'));
     </script>
 </body>
 </html>
