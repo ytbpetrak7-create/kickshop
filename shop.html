@@ -608,17 +608,6 @@
 
     <button class="admin-toggle" id="adminBtn" onclick="toggleAdmin()" style="display: none;">⚙️ Admin</button>
 
-    <div class="modal-overlay" id="usernameModal">
-        <div class="modal">
-            <h3>Zadej svou prezdivku</h3>
-            <p>Prihlasil ses pres Kick. Zadej svou Kick prezdivku:</p>
-            <input type="text" id="usernameInput" placeholder="Tve Kick jmeno" style="width: 100%; padding: 12px 15px; border: 1px solid rgba(255,255,255,0.2); border-radius: 8px; background: rgba(255,255,255,0.05); color: #fff; font-size: 16px; margin-bottom: 15px;">
-            <div class="actions">
-                <button class="btn" onclick="submitUsername()">Pokracovat</button>
-            </div>
-        </div>
-    </div>
-
     <div class="modal-overlay" id="redeemModal">
         <div class="modal">
             <h3 id="modalTitle">Vyzvednout?</h3>
@@ -650,12 +639,10 @@
             if (code && state) {
                 const savedState = localStorage.getItem('oauth_state');
                 if (state === savedState) {
+                    localStorage.setItem('currentUser', 'Kick uzivatel');
                     localStorage.removeItem('oauth_state');
                     localStorage.removeItem('pkce_verifier');
                     window.history.replaceState({}, '', window.location.pathname);
-
-                    document.getElementById('usernameModal').classList.add('show');
-                    return;
                 }
             }
 
@@ -675,28 +662,6 @@
             updateUserUI();
 
             if (currentUser === ADMIN_USER) {
-                document.getElementById('adminBtn').style.display = 'block';
-            }
-        }
-
-        function submitUsername() {
-            const username = document.getElementById('usernameInput').value.trim();
-            if (!username) { alert('Zadej svou prezdivku!'); return; }
-
-            localStorage.setItem('currentUser', username);
-
-            const users = JSON.parse(localStorage.getItem('users')) || {};
-            if (!users[username]) {
-                users[username] = { points: 0, redemptions: [] };
-                localStorage.setItem('users', JSON.stringify(users));
-            }
-
-            document.getElementById('usernameModal').classList.remove('show');
-
-            loadSettings();
-            updateUserUI();
-
-            if (username === ADMIN_USER) {
                 document.getElementById('adminBtn').style.display = 'block';
             }
         }
