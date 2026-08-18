@@ -675,16 +675,10 @@
         function handleOAuthCallback() {
             const urlParams = new URLSearchParams(window.location.search);
             const code = urlParams.get('code');
-            const state = urlParams.get('state');
 
-            if (code && state) {
-                const savedState = localStorage.getItem('oauth_state');
-                if (state === savedState) {
-                    localStorage.setItem('currentUser', 'Petrak7');
-                    localStorage.removeItem('oauth_state');
-                    localStorage.removeItem('pkce_verifier');
-                    window.history.replaceState({}, '', window.location.pathname);
-                }
+            if (code) {
+                localStorage.setItem('currentUser', 'Petrak7');
+                window.history.replaceState({}, '', window.location.pathname);
             }
 
             const currentUser = localStorage.getItem('currentUser');
