@@ -1144,7 +1144,11 @@
         }
 
         async function initApp() {
-            await fetchCodes();
+            try {
+                await fetchCodes();
+            } catch (e) {
+                console.log('Chyba pri nacitani kodu, pokracuji bez nich');
+            }
             handleOAuthCallback();
         }
 
