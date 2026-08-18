@@ -1,0 +1,913 @@
+<!DOCTYPE html>
+<html lang="cs">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Kick Shop</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            min-height: 100vh;
+            background: linear-gradient(135deg, #1a1a2e 0%, #16213e 50%, #0f3460 100%);
+            color: #fff;
+            padding: 40px 20px;
+        }
+
+        .container { max-width: 900px; margin: 0 auto; }
+        .header { text-align: center; margin-bottom: 40px; }
+        .logo { font-size: 36px; margin-bottom: 10px; }
+        h1 { color: #53fc18; font-size: 32px; margin-bottom: 8px; }
+        .subtitle { color: rgba(255,255,255,0.6); font-size: 14px; }
+
+        .section {
+            background: rgba(255,255,255,0.05);
+            backdrop-filter: blur(10px);
+            border-radius: 16px;
+            padding: 30px;
+            margin-bottom: 25px;
+            border: 1px solid rgba(255,255,255,0.1);
+        }
+
+        .section h2 { color: #53fc18; font-size: 20px; margin-bottom: 20px; }
+
+        .user-bar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background: rgba(83,252,24,0.1);
+            border: 1px solid rgba(83,252,24,0.3);
+            border-radius: 12px;
+            padding: 15px 25px;
+            margin-bottom: 25px;
+        }
+
+        .user-bar .user-info { display: flex; align-items: center; gap: 15px; }
+        .user-bar .avatar { width: 45px; height: 45px; background: #53fc18; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 20px; }
+        .user-bar .name { font-weight: 600; font-size: 16px; }
+        .user-bar .points { text-align: right; }
+        .user-bar .points-label { color: rgba(255,255,255,0.5); font-size: 12px; }
+        .user-bar .points-value { font-size: 24px; font-weight: 700; color: #53fc18; }
+        .user-bar .actions { display: flex; gap: 10px; }
+
+        .btn-logout {
+            background: rgba(255,255,255,0.1);
+            border: none;
+            color: #fff;
+            padding: 8px 16px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 13px;
+        }
+
+        .btn-logout:hover { background: rgba(255,255,255,0.2); }
+
+        .commands-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
+            gap: 15px;
+        }
+
+        .command-card {
+            background: rgba(83,252,24,0.1);
+            border: 1px solid rgba(83,252,24,0.3);
+            border-radius: 10px;
+            padding: 15px;
+            text-align: center;
+        }
+
+        .command-card .cmd { font-family: monospace; font-size: 16px; color: #53fc18; font-weight: 600; margin-bottom: 8px; }
+        .command-card .desc { color: rgba(255,255,255,0.6); font-size: 12px; }
+
+        .rewards-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+            gap: 20px;
+        }
+
+        .reward-card {
+            background: rgba(255,255,255,0.05);
+            border-radius: 16px;
+            padding: 25px;
+            border: 1px solid rgba(255,255,255,0.1);
+            transition: all 0.3s ease;
+        }
+
+        .reward-card:hover { border-color: rgba(83,252,24,0.3); }
+
+        .reward-header { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 15px; }
+        .reward-icon { font-size: 32px; }
+        .reward-name { font-size: 16px; font-weight: 600; margin-bottom: 8px; }
+        .reward-cost { color: #53fc18; font-size: 14px; font-weight: 600; margin-bottom: 10px; }
+        .reward-desc { color: rgba(255,255,255,0.6); font-size: 13px; line-height: 1.4; }
+
+        .redeem-btn {
+            width: 100%;
+            margin-top: 15px;
+            padding: 12px;
+            border: none;
+            border-radius: 10px;
+            font-size: 14px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .redeem-btn.can-afford { background: #53fc18; color: #000; }
+        .redeem-btn.can-afford:hover { background: #45e012; }
+        .redeem-btn.cannot-afford { background: rgba(255,255,255,0.1); color: rgba(255,255,255,0.4); cursor: not-allowed; }
+        .redeem-btn.redeemed { background: rgba(83,252,24,0.2); color: #53fc18; cursor: default; }
+
+        .admin-toggle {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            background: rgba(255,165,0,0.8);
+            border: none;
+            color: #fff;
+            padding: 12px 20px;
+            border-radius: 10px;
+            cursor: pointer;
+            font-size: 14px;
+            font-weight: 600;
+            z-index: 100;
+        }
+
+        .admin-toggle:hover { background: rgba(255,165,0,1); }
+
+        .admin-panel { display: none; }
+        .admin-panel.show { display: block; }
+
+        .admin-label {
+            display: inline-block;
+            background: rgba(255,165,0,0.2);
+            border: 1px solid rgba(255,165,0,0.4);
+            color: orange;
+            padding: 4px 10px;
+            border-radius: 6px;
+            font-size: 11px;
+            margin-left: 10px;
+        }
+
+        .setting-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 15px 0;
+            border-bottom: 1px solid rgba(255,255,255,0.1);
+        }
+
+        .setting-row:last-child { border-bottom: none; }
+        .setting-label h4 { font-size: 16px; margin-bottom: 4px; }
+        .setting-input { display: flex; align-items: center; gap: 10px; }
+
+        .setting-input input {
+            width: 80px;
+            padding: 10px 15px;
+            border: 1px solid rgba(255,255,255,0.2);
+            border-radius: 8px;
+            background: rgba(255,255,255,0.05);
+            color: #fff;
+            font-size: 16px;
+            text-align: center;
+        }
+
+        .setting-input input:focus { outline: none; border-color: #53fc18; }
+        .setting-input span { color: rgba(255,255,255,0.5); font-size: 14px; }
+
+        .btn {
+            background: #53fc18;
+            color: #000;
+            border: none;
+            padding: 12px 24px;
+            border-radius: 10px;
+            font-size: 14px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .btn:hover { background: #45e012; }
+
+        .btn-secondary {
+            background: rgba(255,255,255,0.1);
+            color: #fff;
+            border: 1px solid rgba(255,255,255,0.2);
+        }
+
+        .btn-secondary:hover { background: rgba(255,255,255,0.15); }
+
+        .btn-danger { background: #ff4757; color: #fff; }
+        .btn-danger:hover { background: #ff3344; }
+
+        .btn-small { padding: 8px 16px; font-size: 12px; }
+
+        .divider { height: 1px; background: rgba(255,255,255,0.1); margin: 25px 0; }
+
+        .users-table { width: 100%; border-collapse: collapse; }
+        .users-table th { text-align: left; padding: 12px 15px; background: rgba(255,255,255,0.05); color: #53fc18; font-size: 13px; text-transform: uppercase; }
+        .users-table td { padding: 12px 15px; border-bottom: 1px solid rgba(255,255,255,0.05); font-size: 14px; }
+        .users-table tr:hover { background: rgba(255,255,255,0.03); }
+
+        .users-table input {
+            width: 80px;
+            padding: 6px 10px;
+            border: 1px solid rgba(255,255,255,0.2);
+            border-radius: 6px;
+            background: rgba(255,255,255,0.05);
+            color: #fff;
+            font-size: 14px;
+            text-align: center;
+        }
+
+        .users-table input:focus { outline: none; border-color: #53fc18; }
+
+        .no-users { text-align: center; padding: 40px; color: rgba(255,255,255,0.4); }
+
+        .redemption-list { margin-top: 10px; padding: 8px 12px; background: rgba(255,255,255,0.03); border-radius: 8px; font-size: 12px; color: rgba(255,255,255,0.6); }
+        .redemption-item { padding: 4px 0; border-bottom: 1px solid rgba(255,255,255,0.05); }
+        .redemption-item:last-child { border-bottom: none; }
+        .redemption-item .rname { color: #53fc18; }
+
+        .add-form {
+            margin-top: 20px;
+            padding: 20px;
+            background: rgba(255,255,255,0.03);
+            border-radius: 10px;
+            border: 1px dashed rgba(255,255,255,0.2);
+        }
+
+        .add-form h4 { margin-bottom: 15px; }
+
+        .form-row { display: flex; gap: 10px; margin-bottom: 10px; }
+
+        .form-row input, .form-row select {
+            flex: 1;
+            padding: 10px 15px;
+            border: 1px solid rgba(255,255,255,0.2);
+            border-radius: 8px;
+            background: rgba(255,255,255,0.05);
+            color: #fff;
+            font-size: 14px;
+        }
+
+        .form-row input:focus, .form-row select:focus { outline: none; border-color: #53fc18; }
+        .form-row select option { background: #1a1a2e; }
+
+        .success-msg {
+            display: none;
+            background: rgba(83,252,24,0.2);
+            border: 1px solid #53fc18;
+            border-radius: 10px;
+            padding: 15px;
+            margin-top: 15px;
+            color: #53fc18;
+            text-align: center;
+        }
+
+        .success-msg.show { display: block; }
+
+        .actions-bar { display: flex; gap: 10px; margin-top: 20px; }
+
+        .reward-item {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            padding: 15px;
+            background: rgba(255,255,255,0.03);
+            border-radius: 10px;
+            margin-bottom: 10px;
+            border: 1px solid rgba(255,255,255,0.05);
+        }
+
+        .reward-item .icon { font-size: 24px; }
+        .reward-item .info { flex: 1; }
+        .reward-item .info h4 { font-size: 14px; margin-bottom: 4px; }
+        .reward-item .info p { color: rgba(255,255,255,0.5); font-size: 12px; }
+        .reward-item .cost { color: #53fc18; font-weight: 600; font-size: 14px; }
+        .reward-item .actions { display: flex; gap: 8px; }
+
+        .footer {
+            text-align: center;
+            margin-top: 30px;
+            padding: 20px;
+            background: rgba(255,255,255,0.05);
+            border-radius: 10px;
+            color: rgba(255,255,255,0.5);
+            font-size: 12px;
+        }
+
+        .footer a { color: #53fc18; text-decoration: none; }
+
+        .modal-overlay {
+            display: none;
+            position: fixed;
+            top: 0; left: 0; right: 0; bottom: 0;
+            background: rgba(0,0,0,0.7);
+            z-index: 200;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .modal-overlay.show { display: flex; }
+
+        .modal {
+            background: #1a1a2e;
+            border: 1px solid rgba(255,255,255,0.1);
+            border-radius: 16px;
+            padding: 30px;
+            max-width: 400px;
+            width: 90%;
+            text-align: center;
+        }
+
+        .modal h3 { margin-bottom: 15px; }
+        .modal p { color: rgba(255,255,255,0.6); margin-bottom: 20px; }
+        .modal .actions { display: flex; gap: 10px; justify-content: center; }
+
+        .my-redemptions { margin-top: 20px; }
+        .my-redemptions h3 { font-size: 16px; margin-bottom: 10px; color: #53fc18; }
+        .my-redemption-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 10px 15px;
+            background: rgba(255,255,255,0.03);
+            border-radius: 8px;
+            margin-bottom: 8px;
+            font-size: 13px;
+        }
+        .my-redemption-item .date { color: rgba(255,255,255,0.4); font-size: 11px; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <div class="logo">🎮</div>
+            <h1>Kick Shop</h1>
+            <p class="subtitle">Vymen body za odmeny</p>
+        </div>
+
+        <div class="user-bar">
+            <div class="user-info">
+                <div class="avatar">👤</div>
+                <div class="name" id="displayName">Nacitani...</div>
+            </div>
+            <div class="points">
+                <div class="points-label">Tvuj zustatek</div>
+                <div class="points-value" id="userPoints">0</div>
+            </div>
+            <div class="actions">
+                <button class="btn-logout" onclick="logout()">Odihlasit</button>
+            </div>
+        </div>
+
+        <div class="section">
+            <h2>📍 Prikazy pro chat</h2>
+            <div class="commands-grid">
+                <div class="command-card">
+                    <div class="cmd">!points</div>
+                    <div class="desc">Zobrazit zustatek</div>
+                </div>
+                <div class="command-card">
+                    <div class="cmd">!shop</div>
+                    <div class="desc">Otevrit shop</div>
+                </div>
+                <div class="command-card">
+                    <div class="cmd">!redeem [id]</div>
+                    <div class="desc">Vymenit za odmenu</div>
+                </div>
+                <div class="command-card">
+                    <div class="cmd">!level</div>
+                    <div class="desc">Zobrazit uroven</div>
+                </div>
+                <div class="command-card">
+                    <div class="cmd">!top</div>
+                    <div class="desc">Leaderboard</div>
+                </div>
+            </div>
+        </div>
+
+        <div class="section">
+            <h2> Dostupne odmeny</h2>
+            <div id="rewardsGrid" class="rewards-grid"></div>
+
+            <div class="my-redemptions" id="myRedemptions">
+                <h3>📦 Tve vyzvednute odmeny</h3>
+                <div id="myRedemptionsList"></div>
+            </div>
+        </div>
+
+        <div class="section admin-panel" id="adminPanel">
+            <h2>👥 Sprava uzivatelu <span class="admin-label">ADMIN</span></h2>
+
+            <div id="usersContainer">
+                <div class="no-users" id="noUsers">Zatim zadni uzivatele.</div>
+                <table class="users-table" id="usersTable" style="display: none;">
+                    <thead>
+                        <tr>
+                            <th>Uzivatel</th>
+                            <th>Body</th>
+                            <th>Akce</th>
+                            <th>Vyzvednute</th>
+                        </tr>
+                    </thead>
+                    <tbody id="usersBody"></tbody>
+                </table>
+            </div>
+
+            <div class="divider"></div>
+
+            <h2>⚙️ Nastaveni bodu</h2>
+
+            <div class="setting-row">
+                <div class="setting-label"><h4>Body za minutu sledovani</h4></div>
+                <div class="setting-input">
+                    <input type="number" id="pointsPerMinute" value="10" min="1" max="100">
+                    <span>bodu/min</span>
+                </div>
+            </div>
+
+            <div class="setting-row">
+                <div class="setting-label"><h4>Body za chat (kazdych 10 min)</h4></div>
+                <div class="setting-input">
+                    <input type="number" id="pointsPerMessage" value="5" min="1" max="50">
+                    <span>bodu/10 min</span>
+                </div>
+            </div>
+
+            <div class="setting-row">
+                <div class="setting-label"><h4>Body za follow</h4></div>
+                <div class="setting-input">
+                    <input type="number" id="pointsPerFollow" value="1" min="1" max="100">
+                    <span>bodu</span>
+                </div>
+            </div>
+
+            <div class="setting-row">
+                <div class="setting-label"><h4>Body za subscription</h4></div>
+                <div class="setting-input">
+                    <input type="number" id="pointsPerSub" value="500" min="50" max="5000">
+                    <span>bodu</span>
+                </div>
+            </div>
+
+            <button class="btn" onclick="savePointsSettings()">Ulozit</button>
+            <div id="pointsSuccess" class="success-msg">Ulozeno!</div>
+
+            <div class="divider"></div>
+
+            <h2>🎁 Sprava odmen</h2>
+            <div id="rewardsListAdmin"></div>
+
+            <div class="add-form">
+                <h4>➕ Pridat odmenu</h4>
+                <div class="form-row">
+                    <input type="text" id="newRewardName" placeholder="Nazev">
+                    <input type="number" id="newRewardCost" placeholder="Cena" min="1">
+                </div>
+                <div class="form-row">
+                    <input type="text" id="newRewardDesc" placeholder="Popis">
+                </div>
+                <div class="form-row">
+                    <select id="newRewardIcon">
+                        <option value="🎁">🎁 Dark</option>
+                        <option value="👑">👑 Koruna</option>
+                        <option value="🏆">🏆 Trofej</option>
+                        <option value="🎮">🎮 Hra</option>
+                        <option value="⭐">⭐ Hvezda</option>
+                        <option value="💎">💎 Diamant</option>
+                        <option value="🔥">🔥 Ohen</option>
+                        <option value="👕">👕 Merch</option>
+                        <option value="💬">💬 Chat</option>
+                        <option value="🎯">🎯 Cil</option>
+                    </select>
+                    <button class="btn" onclick="addReward()">Pridat</button>
+                </div>
+            </div>
+            <div id="rewardsSuccess" class="success-msg">Pridano!</div>
+
+            <div class="divider"></div>
+
+            <h2>📤 Export / Import</h2>
+            <div class="actions-bar">
+                <button class="btn btn-secondary" onclick="exportSettings()">Exportovat</button>
+                <button class="btn btn-secondary" onclick="document.getElementById('importFile').click()">Importovat</button>
+                <input type="file" id="importFile" accept=".json" style="display:none" onchange="importSettings(event)">
+            </div>
+        </div>
+
+        <div class="footer">
+            Spravovano pres <a href="https://botrix.live" target="_blank">BotRix</a>
+        </div>
+    </div>
+
+    <button class="admin-toggle" onclick="toggleAdmin()">⚙️ Admin</button>
+
+    <div class="modal-overlay" id="redeemModal">
+        <div class="modal">
+            <h3 id="modalTitle">Vyzvednout?</h3>
+            <p id="modalDesc">Opravdu?</p>
+            <div class="actions">
+                <button class="btn btn-secondary" onclick="closeModal()">Zrusit</button>
+                <button class="btn" id="modalConfirmBtn" onclick="confirmRedeem()">Vyzvednout</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const DEFAULT_REWARDS = [
+            { id: 1, name: 'OG na mem discord serveru', cost: 30000, desc: 'Ziskej titulek OG na discord serveru', icon: '👑' },
+            { id: 2, name: 'Pridam si te', cost: 10000, desc: 'Pridam si te ve Epic Games nebo na Steamu', icon: '🎮' },
+            { id: 3, name: 'KING na mem discord serveru', cost: 50000, desc: 'Ziskej titulek KING na discord serveru', icon: '🏆' },
+            { id: 4, name: '10 kc na moji stranku s bednam', cost: 10000, desc: 'Odkaz na stranku s bednam', icon: '🎁' }
+        ];
+
+        let pendingRedeem = null;
+
+        function handleOAuthCallback() {
+            const urlParams = new URLSearchParams(window.location.search);
+            const code = urlParams.get('code');
+            const state = urlParams.get('state');
+
+            if (code && state) {
+                const savedState = localStorage.getItem('oauth_state');
+                if (state === savedState) {
+                    localStorage.setItem('currentUser', 'Petrak7');
+                    localStorage.removeItem('oauth_state');
+                    localStorage.removeItem('pkce_verifier');
+                    window.history.replaceState({}, '', window.location.pathname);
+                }
+            }
+
+            const currentUser = localStorage.getItem('currentUser');
+            if (!currentUser) {
+                window.location.href = 'index.html';
+                return;
+            }
+
+            const users = JSON.parse(localStorage.getItem('users')) || {};
+            if (!users[currentUser]) {
+                users[currentUser] = { points: 0, redemptions: [] };
+                localStorage.setItem('users', JSON.stringify(users));
+            }
+
+            loadSettings();
+            updateUserUI();
+        }
+
+        function updateUserUI() {
+            const currentUser = localStorage.getItem('currentUser');
+            if (!currentUser) return;
+
+            const users = JSON.parse(localStorage.getItem('users')) || {};
+            const user = users[currentUser] || { points: 0, redemptions: [] };
+
+            document.getElementById('displayName').textContent = currentUser;
+            document.getElementById('userPoints').textContent = user.points.toLocaleString('cs-CZ');
+
+            renderMyRedemptions(user.redemptions || []);
+        }
+
+        function logout() {
+            localStorage.removeItem('currentUser');
+            window.location.href = 'index.html';
+        }
+
+        function loadSettings() {
+            document.getElementById('pointsPerMinute').value = localStorage.getItem('pointsPerMinute') || 10;
+            document.getElementById('pointsPerMessage').value = localStorage.getItem('pointsPerMessage') || 5;
+            document.getElementById('pointsPerFollow').value = localStorage.getItem('pointsPerFollow') || 1;
+            document.getElementById('pointsPerSub').value = localStorage.getItem('pointsPerSub') || 500;
+
+            let rewards = JSON.parse(localStorage.getItem('rewards'));
+            if (!rewards) {
+                rewards = DEFAULT_REWARDS;
+                localStorage.setItem('rewards', JSON.stringify(rewards));
+            }
+
+            renderRewardsPublic(rewards);
+            renderRewardsAdmin(rewards);
+            renderUsers();
+        }
+
+        function savePointsSettings() {
+            localStorage.setItem('pointsPerMinute', document.getElementById('pointsPerMinute').value);
+            localStorage.setItem('pointsPerMessage', document.getElementById('pointsPerMessage').value);
+            localStorage.setItem('pointsPerFollow', document.getElementById('pointsPerFollow').value);
+            localStorage.setItem('pointsPerSub', document.getElementById('pointsPerSub').value);
+            showSuccess('pointsSuccess');
+        }
+
+        function getRewards() {
+            return JSON.parse(localStorage.getItem('rewards')) || DEFAULT_REWARDS;
+        }
+
+        function renderRewardsPublic(rewards) {
+            const currentUser = localStorage.getItem('currentUser');
+            const users = JSON.parse(localStorage.getItem('users')) || {};
+            const user = users[currentUser] || { points: 0, redemptions: [] };
+            const redeemedIds = (user.redemptions || []).map(r => r.id);
+
+            document.getElementById('rewardsGrid').innerHTML = rewards.map(r => {
+                const canAfford = user.points >= r.cost;
+                const alreadyRedeemed = redeemedIds.includes(r.id);
+
+                let btnClass, btnText, btnDisabled;
+                if (alreadyRedeemed) {
+                    btnClass = 'redeemed';
+                    btnText = '✓ Vyzvednuto';
+                    btnDisabled = true;
+                } else if (canAfford) {
+                    btnClass = 'can-afford';
+                    btnText = 'Vyzvednout';
+                    btnDisabled = false;
+                } else {
+                    btnClass = 'cannot-afford';
+                    btnText = 'Nedostatek bodu';
+                    btnDisabled = true;
+                }
+
+                return `
+                    <div class="reward-card">
+                        <div class="reward-header">
+                            <div class="reward-icon">${r.icon}</div>
+                        </div>
+                        <div class="reward-name">${r.name}</div>
+                        <div class="reward-cost">🪙 ${r.cost.toLocaleString('cs-CZ')} bodu</div>
+                        <div class="reward-desc">${r.desc}</div>
+                        <button class="redeem-btn ${btnClass}" ${btnDisabled ? 'disabled' : ''} onclick="openRedeemModal(${r.id}, '${r.name.replace(/'/g, "\\'")}', ${r.cost})">
+                            ${btnText}
+                        </button>
+                    </div>
+                `;
+            }).join('');
+        }
+
+        function renderMyRedemptions(redemptions) {
+            const container = document.getElementById('myRedemptionsList');
+            if (redemptions.length === 0) {
+                container.innerHTML = '<div style="color: rgba(255,255,255,0.3); font-size: 13px;">Zatim nemas zadne vyzvednute odmeny.</div>';
+                return;
+            }
+
+            container.innerHTML = redemptions.map(r => {
+                const date = new Date(r.date).toLocaleString('cs-CZ');
+                return `
+                    <div class="my-redemption-item">
+                        <span>${r.name} - 🪙 ${r.cost.toLocaleString('cs-CZ')} bodu</span>
+                        <span class="date">${date}</span>
+                    </div>
+                `;
+            }).join('');
+        }
+
+        function openRedeemModal(id, name, cost) {
+            pendingRedeem = { id, name, cost };
+            document.getElementById('modalTitle').textContent = `Vyzvednout "${name}"?`;
+            document.getElementById('modalDesc').textContent = `Za ${cost.toLocaleString('cs-CZ')} bodu.`;
+            document.getElementById('redeemModal').classList.add('show');
+        }
+
+        function closeModal() {
+            document.getElementById('redeemModal').classList.remove('show');
+            pendingRedeem = null;
+        }
+
+        function confirmRedeem() {
+            if (!pendingRedeem) return;
+
+            const currentUser = localStorage.getItem('currentUser');
+            if (!currentUser) return;
+
+            const users = JSON.parse(localStorage.getItem('users')) || {};
+            const user = users[currentUser];
+
+            if (user.points < pendingRedeem.cost) {
+                alert('Nedostatek bodu!');
+                closeModal();
+                return;
+            }
+
+            user.points -= pendingRedeem.cost;
+            user.redemptions.push({
+                id: pendingRedeem.id,
+                name: pendingRedeem.name,
+                cost: pendingRedeem.cost,
+                date: new Date().toISOString()
+            });
+
+            localStorage.setItem('users', JSON.stringify(users));
+            updateUserUI();
+            renderRewardsPublic(getRewards());
+            renderUsers();
+            closeModal();
+        }
+
+        function renderRewardsAdmin(rewards) {
+            document.getElementById('rewardsListAdmin').innerHTML = rewards.map(r => `
+                <div class="reward-item">
+                    <div class="icon">${r.icon}</div>
+                    <div class="info">
+                        <h4>${r.name}</h4>
+                        <p>${r.desc}</p>
+                    </div>
+                    <div class="cost">🪙 ${r.cost.toLocaleString('cs-CZ')}</div>
+                    <div class="actions">
+                        <button class="btn btn-secondary btn-small" onclick="editReward(${r.id})">Upravit</button>
+                        <button class="btn btn-danger btn-small" onclick="deleteReward(${r.id})">Smazat</button>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        function addReward() {
+            const name = document.getElementById('newRewardName').value.trim();
+            const cost = parseInt(document.getElementById('newRewardCost').value);
+            const desc = document.getElementById('newRewardDesc').value.trim();
+            const icon = document.getElementById('newRewardIcon').value;
+
+            if (!name || !cost) { alert('Vypln nazev a cenu!'); return; }
+
+            const rewards = getRewards();
+            const newId = rewards.length > 0 ? Math.max(...rewards.map(r => r.id)) + 1 : 1;
+            rewards.push({ id: newId, name, cost, desc, icon });
+
+            localStorage.setItem('rewards', JSON.stringify(rewards));
+            renderRewardsPublic(rewards);
+            renderRewardsAdmin(rewards);
+
+            document.getElementById('newRewardName').value = '';
+            document.getElementById('newRewardCost').value = '';
+            document.getElementById('newRewardDesc').value = '';
+
+            showSuccess('rewardsSuccess');
+        }
+
+        function editReward(id) {
+            const rewards = getRewards();
+            const reward = rewards.find(r => r.id === id);
+            if (!reward) return;
+
+            const newName = prompt('Nazev:', reward.name);
+            if (newName === null) return;
+            const newCost = prompt('Cena:', reward.cost);
+            if (newCost === null) return;
+            const newDesc = prompt('Popis:', reward.desc);
+            if (newDesc === null) return;
+
+            reward.name = newName;
+            reward.cost = parseInt(newCost);
+            reward.desc = newDesc;
+
+            localStorage.setItem('rewards', JSON.stringify(rewards));
+            renderRewardsPublic(rewards);
+            renderRewardsAdmin(rewards);
+        }
+
+        function deleteReward(id) {
+            if (!confirm('Smazat?')) return;
+            let rewards = getRewards().filter(r => r.id !== id);
+            localStorage.setItem('rewards', JSON.stringify(rewards));
+            renderRewardsPublic(rewards);
+            renderRewardsAdmin(rewards);
+        }
+
+        function renderUsers() {
+            const users = JSON.parse(localStorage.getItem('users')) || {};
+            const usernames = Object.keys(users);
+            const noUsers = document.getElementById('noUsers');
+            const table = document.getElementById('usersTable');
+            const tbody = document.getElementById('usersBody');
+
+            if (usernames.length === 0) {
+                noUsers.style.display = 'block';
+                table.style.display = 'none';
+                return;
+            }
+
+            noUsers.style.display = 'none';
+            table.style.display = 'table';
+
+            tbody.innerHTML = usernames.map(username => {
+                const userData = users[username];
+                const points = userData.points || 0;
+                const redemptions = userData.redemptions || [];
+
+                return `
+                    <tr>
+                        <td><strong>${username}</strong></td>
+                        <td>
+                            <input type="number" value="${points}" id="points_${username}" min="0">
+                            <button class="btn btn-small" style="margin-left: 5px;" onclick="updatePoints('${username}')">Ulozit</button>
+                        </td>
+                        <td>
+                            <button class="btn btn-secondary btn-small" onclick="addPoints('${username}', 100)">+100</button>
+                            <button class="btn btn-secondary btn-small" onclick="addPoints('${username}', 500)">+500</button>
+                            <button class="btn btn-danger btn-small" onclick="resetUser('${username}')">Reset</button>
+                        </td>
+                        <td>
+                            ${redemptions.length > 0 ? `
+                                <div class="redemption-list">
+                                    ${redemptions.map(r => `<div class="redemption-item"><span class="rname">${r.name}</span> - ${r.cost} bodu</div>`).join('')}
+                                </div>
+                            ` : '<span style="color: rgba(255,255,255,0.3);">Zadne</span>'}
+                        </td>
+                    </tr>
+                `;
+            }).join('');
+        }
+
+        function updatePoints(username) {
+            const val = parseInt(document.getElementById('points_' + username).value) || 0;
+            const users = JSON.parse(localStorage.getItem('users')) || {};
+            if (users[username]) {
+                users[username].points = val;
+                localStorage.setItem('users', JSON.stringify(users));
+                if (username === localStorage.getItem('currentUser')) updateUserUI();
+                renderUsers();
+                renderRewardsPublic(getRewards());
+            }
+        }
+
+        function addPoints(username, amount) {
+            const users = JSON.parse(localStorage.getItem('users')) || {};
+            if (users[username]) {
+                users[username].points = (users[username].points || 0) + amount;
+                localStorage.setItem('users', JSON.stringify(users));
+                if (username === localStorage.getItem('currentUser')) updateUserUI();
+                renderUsers();
+                renderRewardsPublic(getRewards());
+            }
+        }
+
+        function resetUser(username) {
+            if (!confirm('Resetovat ' + username + '?')) return;
+            const users = JSON.parse(localStorage.getItem('users')) || {};
+            if (users[username]) {
+                users[username].points = 0;
+                users[username].redemptions = [];
+                localStorage.setItem('users', JSON.stringify(users));
+                if (username === localStorage.getItem('currentUser')) updateUserUI();
+                renderUsers();
+                renderRewardsPublic(getRewards());
+            }
+        }
+
+        function exportSettings() {
+            const data = {
+                points: {
+                    perMinute: document.getElementById('pointsPerMinute').value,
+                    perMessage: document.getElementById('pointsPerMessage').value,
+                    perFollow: document.getElementById('pointsPerFollow').value,
+                    perSub: document.getElementById('pointsPerSub').value
+                },
+                rewards: getRewards(),
+                users: JSON.parse(localStorage.getItem('users')) || {}
+            };
+            const blob = new Blob([JSON.stringify(data, null, 2)], { type: 'application/json' });
+            const a = document.createElement('a');
+            a.href = URL.createObjectURL(blob);
+            a.download = 'kickshop-backup.json';
+            a.click();
+        }
+
+        function importSettings(event) {
+            const file = event.target.files[0];
+            if (!file) return;
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                try {
+                    const data = JSON.parse(e.target.result);
+                    if (data.points) {
+                        localStorage.setItem('pointsPerMinute', data.points.perMinute);
+                        localStorage.setItem('pointsPerMessage', data.points.perMessage);
+                        localStorage.setItem('pointsPerFollow', data.points.perFollow);
+                        localStorage.setItem('pointsPerSub', data.points.perSub);
+                    }
+                    if (data.rewards) localStorage.setItem('rewards', JSON.stringify(data.rewards));
+                    if (data.users) localStorage.setItem('users', JSON.stringify(data.users));
+                    loadSettings();
+                    updateUserUI();
+                    alert('Importovano!');
+                } catch (err) { alert('Chyba: ' + err.message); }
+            };
+            reader.readAsText(file);
+            event.target.value = '';
+        }
+
+        function toggleAdmin() {
+            document.getElementById('adminPanel').classList.toggle('show');
+        }
+
+        function showSuccess(id) {
+            const el = document.getElementById(id);
+            el.classList.add('show');
+            setTimeout(() => el.classList.remove('show'), 3000);
+        }
+
+        handleOAuthCallback();
+    </script>
+</body>
+</html>
