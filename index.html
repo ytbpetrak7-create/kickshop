@@ -16,7 +16,6 @@
         }
 
         .container { max-width: 900px; margin: 0 auto; }
-
         .header { text-align: center; margin-bottom: 40px; }
         .logo { font-size: 36px; margin-bottom: 10px; }
         h1 { color: #53fc18; font-size: 32px; margin-bottom: 8px; }
@@ -31,10 +30,91 @@
             border: 1px solid rgba(255,255,255,0.1);
         }
 
-        .section h2 {
-            color: #53fc18;
-            font-size: 20px;
-            margin-bottom: 20px;
+        .section h2 { color: #53fc18; font-size: 20px; margin-bottom: 20px; }
+
+        .commands-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
+            gap: 15px;
+        }
+
+        .command-card {
+            background: rgba(83,252,24,0.1);
+            border: 1px solid rgba(83,252,24,0.3);
+            border-radius: 10px;
+            padding: 15px;
+            text-align: center;
+        }
+
+        .command-card .cmd { font-family: monospace; font-size: 16px; color: #53fc18; font-weight: 600; margin-bottom: 8px; }
+        .command-card .desc { color: rgba(255,255,255,0.6); font-size: 12px; }
+
+        .how-it-works {
+            padding: 20px;
+            background: rgba(255,255,255,0.03);
+            border-radius: 10px;
+            margin-top: 20px;
+        }
+
+        .how-it-works h4 { color: #53fc18; margin-bottom: 15px; }
+
+        .how-it-works ol {
+            color: rgba(255,255,255,0.6);
+            font-size: 13px;
+            padding-left: 20px;
+            line-height: 2;
+        }
+
+        .how-it-works span { color: #53fc18; font-family: monospace; }
+
+        .rewards-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+            gap: 20px;
+        }
+
+        .reward-card {
+            background: rgba(255,255,255,0.05);
+            border-radius: 16px;
+            padding: 25px;
+            border: 1px solid rgba(255,255,255,0.1);
+        }
+
+        .reward-header { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 15px; }
+        .reward-icon { font-size: 32px; }
+        .reward-name { font-size: 16px; font-weight: 600; margin-bottom: 8px; }
+        .reward-cost { color: #53fc18; font-size: 14px; font-weight: 600; margin-bottom: 10px; }
+        .reward-desc { color: rgba(255,255,255,0.6); font-size: 13px; line-height: 1.4; }
+
+        .admin-toggle {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            background: rgba(255,165,0,0.8);
+            border: none;
+            color: #fff;
+            padding: 12px 20px;
+            border-radius: 10px;
+            cursor: pointer;
+            font-size: 14px;
+            font-weight: 600;
+            z-index: 100;
+        }
+
+        .admin-toggle:hover { background: rgba(255,165,0,1); }
+
+        .admin-panel { display: none; }
+        .admin-panel.show { display: block; }
+
+        .admin-label {
+            display: inline-block;
+            background: rgba(255,165,0,0.2);
+            border: 1px solid rgba(255,165,0,0.4);
+            color: orange;
+            padding: 4px 10px;
+            border-radius: 6px;
+            font-size: 11px;
+            margin-left: 10px;
         }
 
         .setting-row {
@@ -46,10 +126,8 @@
         }
 
         .setting-row:last-child { border-bottom: none; }
-
         .setting-label h4 { font-size: 16px; margin-bottom: 4px; }
         .setting-label p { color: rgba(255,255,255,0.5); font-size: 13px; }
-
         .setting-input { display: flex; align-items: center; gap: 10px; }
 
         .setting-input input {
@@ -78,7 +156,7 @@
             transition: all 0.3s ease;
         }
 
-        .btn:hover { background: #45e012; transform: translateY(-2px); }
+        .btn:hover { background: #45e012; }
 
         .btn-secondary {
             background: rgba(255,255,255,0.1);
@@ -93,126 +171,66 @@
 
         .btn-small { padding: 8px 16px; font-size: 12px; }
 
-        .commands-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
-            gap: 15px;
-            margin-bottom: 25px;
+        .divider { height: 1px; background: rgba(255,255,255,0.1); margin: 25px 0; }
+
+        .users-table {
+            width: 100%;
+            border-collapse: collapse;
         }
 
-        .command-card {
-            background: rgba(83,252,24,0.1);
-            border: 1px solid rgba(83,252,24,0.3);
-            border-radius: 10px;
-            padding: 15px;
+        .users-table th {
+            text-align: left;
+            padding: 12px 15px;
+            background: rgba(255,255,255,0.05);
+            color: #53fc18;
+            font-size: 13px;
+            text-transform: uppercase;
+        }
+
+        .users-table td {
+            padding: 12px 15px;
+            border-bottom: 1px solid rgba(255,255,255,0.05);
+            font-size: 14px;
+        }
+
+        .users-table tr:hover { background: rgba(255,255,255,0.03); }
+
+        .users-table input {
+            width: 80px;
+            padding: 6px 10px;
+            border: 1px solid rgba(255,255,255,0.2);
+            border-radius: 6px;
+            background: rgba(255,255,255,0.05);
+            color: #fff;
+            font-size: 14px;
             text-align: center;
         }
 
-        .command-card .cmd {
-            font-family: monospace;
-            font-size: 16px;
-            color: #53fc18;
-            font-weight: 600;
-            margin-bottom: 8px;
+        .users-table input:focus { outline: none; border-color: #53fc18; }
+
+        .no-users {
+            text-align: center;
+            padding: 40px;
+            color: rgba(255,255,255,0.4);
         }
 
-        .command-card .desc {
-            color: rgba(255,255,255,0.6);
+        .redemption-list {
+            margin-top: 10px;
+            padding: 8px 12px;
+            background: rgba(255,255,255,0.03);
+            border-radius: 8px;
             font-size: 12px;
-        }
-
-        .how-it-works {
-            padding: 20px;
-            background: rgba(255,255,255,0.03);
-            border-radius: 10px;
-        }
-
-        .how-it-works h4 { color: #53fc18; margin-bottom: 15px; }
-
-        .how-it-works ol {
             color: rgba(255,255,255,0.6);
-            font-size: 13px;
-            padding-left: 20px;
-            line-height: 2;
         }
 
-        .how-it-works span { color: #53fc18; font-family: monospace; }
-
-        .rewards-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
-            gap: 20px;
+        .redemption-item {
+            padding: 4px 0;
+            border-bottom: 1px solid rgba(255,255,255,0.05);
         }
 
-        .reward-card {
-            background: rgba(255,255,255,0.05);
-            border-radius: 16px;
-            padding: 25px;
-            border: 1px solid rgba(255,255,255,0.1);
-            transition: all 0.3s ease;
-        }
+        .redemption-item:last-child { border-bottom: none; }
 
-        .reward-card:hover {
-            transform: translateY(-5px);
-            border-color: #53fc18;
-            box-shadow: 0 10px 30px rgba(83,252,24,0.2);
-        }
-
-        .reward-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: flex-start;
-            margin-bottom: 15px;
-        }
-
-        .reward-icon { font-size: 32px; }
-
-        .reward-name { font-size: 16px; font-weight: 600; margin-bottom: 8px; }
-        .reward-cost { color: #53fc18; font-size: 14px; font-weight: 600; margin-bottom: 10px; }
-        .reward-desc { color: rgba(255,255,255,0.6); font-size: 13px; line-height: 1.4; }
-
-        .admin-toggle {
-            position: fixed;
-            bottom: 20px;
-            right: 20px;
-            background: rgba(255,255,255,0.1);
-            border: 1px solid rgba(255,255,255,0.2);
-            color: #fff;
-            padding: 12px 20px;
-            border-radius: 10px;
-            cursor: pointer;
-            font-size: 14px;
-            z-index: 100;
-            backdrop-filter: blur(10px);
-        }
-
-        .admin-toggle:hover { background: rgba(255,255,255,0.15); }
-
-        .admin-panel { display: none; }
-        .admin-panel.show { display: block; }
-
-        .rewards-list-admin { margin-top: 20px; }
-
-        .reward-item {
-            display: flex;
-            align-items: center;
-            gap: 15px;
-            padding: 15px;
-            background: rgba(255,255,255,0.03);
-            border-radius: 10px;
-            margin-bottom: 10px;
-            border: 1px solid rgba(255,255,255,0.05);
-        }
-
-        .reward-item .icon { font-size: 24px; }
-
-        .reward-item .info { flex: 1; }
-        .reward-item .info h4 { font-size: 14px; margin-bottom: 4px; }
-        .reward-item .info p { color: rgba(255,255,255,0.5); font-size: 12px; }
-
-        .reward-item .cost { color: #53fc18; font-weight: 600; font-size: 14px; }
-
-        .reward-item .actions { display: flex; gap: 8px; }
+        .redemption-item .name { color: #53fc18; }
 
         .add-form {
             margin-top: 20px;
@@ -254,6 +272,24 @@
 
         .actions-bar { display: flex; gap: 10px; margin-top: 20px; }
 
+        .reward-item {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            padding: 15px;
+            background: rgba(255,255,255,0.03);
+            border-radius: 10px;
+            margin-bottom: 10px;
+            border: 1px solid rgba(255,255,255,0.05);
+        }
+
+        .reward-item .icon { font-size: 24px; }
+        .reward-item .info { flex: 1; }
+        .reward-item .info h4 { font-size: 14px; margin-bottom: 4px; }
+        .reward-item .info p { color: rgba(255,255,255,0.5); font-size: 12px; }
+        .reward-item .cost { color: #53fc18; font-weight: 600; font-size: 14px; }
+        .reward-item .actions { display: flex; gap: 8px; }
+
         .footer {
             text-align: center;
             margin-top: 30px;
@@ -265,23 +301,6 @@
         }
 
         .footer a { color: #53fc18; text-decoration: none; }
-
-        .divider {
-            height: 1px;
-            background: rgba(255,255,255,0.1);
-            margin: 25px 0;
-        }
-
-        .admin-label {
-            display: inline-block;
-            background: rgba(255,165,0,0.2);
-            border: 1px solid rgba(255,165,0,0.4);
-            color: orange;
-            padding: 4px 10px;
-            border-radius: 6px;
-            font-size: 11px;
-            margin-left: 10px;
-        }
     </style>
 </head>
 <body>
@@ -320,7 +339,7 @@
             <div class="how-it-works">
                 <h4> Jak to funguje?</h4>
                 <ol>
-                    <li>Sleduj stream a sbiras body za <span>!points</span></li>
+                    <li>Sleduj stream a sbiras body za kazdou minutu</li>
                     <li>Pis do chatu a ziskej bonusove body kazdych <span>10 minut</span></li>
                     <li>Napis <span>!shop</span> a podivej se na odmeny</li>
                     <li>Napis <span>!redeem [id]</span> a vymen body za odmenu</li>
@@ -331,36 +350,34 @@
 
         <div class="section">
             <h2> Dostupne odmeny</h2>
-            <div id="userPanel" style="margin-bottom: 20px;">
-                <div id="loginForm" style="display: flex; gap: 10px; align-items: center;">
-                    <input type="text" id="usernameInput" placeholder="Tve Kick jmeno" style="flex: 1; padding: 12px 15px; border: 1px solid rgba(255,255,255,0.2); border-radius: 8px; background: rgba(255,255,255,0.05); color: #fff; font-size: 14px;">
-                    <button class="btn" onclick="loginUser()">Prihlasit se</button>
-                </div>
-                <div id="userStats" style="display: none; background: rgba(83,252,24,0.1); border: 1px solid rgba(83,252,24,0.3); border-radius: 10px; padding: 15px 20px; display: none; align-items: center; justify-content: space-between;">
-                    <div>
-                        <div style="color: rgba(255,255,255,0.6); font-size: 12px;">Prihlasen jako</div>
-                        <div style="font-weight: 600;" id="displayName"></div>
-                    </div>
-                    <div style="text-align: center;">
-                        <div style="color: rgba(255,255,255,0.6); font-size: 12px;">Tvuj zustatek</div>
-                        <div style="font-size: 24px; font-weight: 700; color: #53fc18;" id="userPoints">0</div>
-                    </div>
-                    <div style="display: flex; gap: 10px;">
-                        <button class="btn btn-small" onclick="addDemoPoints(10)">+10 bodu</button>
-                        <button class="btn btn-secondary btn-small" onclick="logoutUser()">Odihlasit</button>
-                    </div>
-                </div>
-            </div>
             <div id="rewardsGrid" class="rewards-grid"></div>
         </div>
 
         <div class="section admin-panel" id="adminPanel">
-            <h2>⚙️ Nastaveni bodu <span class="admin-label">ADMIN</span></h2>
+            <h2>👥 Sprava uzivatelu <span class="admin-label">ADMIN</span></h2>
+
+            <div id="usersContainer">
+                <div class="no-users" id="noUsers">Zatim zadni uzivatele. Budou se pridavat jak divaci pouzivaji BotRix v chatu.</div>
+                <table class="users-table" id="usersTable" style="display: none;">
+                    <thead>
+                        <tr>
+                            <th>Uzivatel</th>
+                            <th>Body</th>
+                            <th>Upravit</th>
+                            <th>Vyzvednute odmeny</th>
+                        </tr>
+                    </thead>
+                    <tbody id="usersBody"></tbody>
+                </table>
+            </div>
+
+            <div class="divider"></div>
+
+            <h2>⚙️ Nastaveni bodu</h2>
 
             <div class="setting-row">
                 <div class="setting-label">
                     <h4>Body za minutu sledovani</h4>
-                    <p>Kolik bodu za kazdou minutu sledovani</p>
                 </div>
                 <div class="setting-input">
                     <input type="number" id="pointsPerMinute" value="10" min="1" max="100">
@@ -371,7 +388,6 @@
             <div class="setting-row">
                 <div class="setting-label">
                     <h4>Body za chat (kazdych 10 min)</h4>
-                    <p>Bonus za aktivitu v chatu</p>
                 </div>
                 <div class="setting-input">
                     <input type="number" id="pointsPerMessage" value="5" min="1" max="50">
@@ -382,7 +398,6 @@
             <div class="setting-row">
                 <div class="setting-label">
                     <h4>Body za follow</h4>
-                    <p>Jednorazove (1 = zabrani zneuziti)</p>
                 </div>
                 <div class="setting-input">
                     <input type="number" id="pointsPerFollow" value="1" min="1" max="100">
@@ -393,7 +408,6 @@
             <div class="setting-row">
                 <div class="setting-label">
                     <h4>Body za subscription</h4>
-                    <p>Bonus za sub</p>
                 </div>
                 <div class="setting-input">
                     <input type="number" id="pointsPerSub" value="500" min="50" max="5000">
@@ -406,7 +420,7 @@
 
             <div class="divider"></div>
 
-            <h2>Sprava odmen</h2>
+            <h2>🎁 Sprava odmen</h2>
             <div id="rewardsListAdmin" class="rewards-list-admin"></div>
 
             <div class="add-form">
@@ -430,11 +444,6 @@
                         <option value="👕">👕 Merch</option>
                         <option value="💬">💬 Chat</option>
                         <option value="🎯">🎯 Cil</option>
-                        <option value="🎵">🎵 Hudba</option>
-                        <option value="🖼️">🖼️ Obraz</option>
-                        <option value="⚡">⚡ Energy</option>
-                        <option value="🚀">🚀 Raketa</option>
-                        <option value="💰">💰 Penize</option>
                     </select>
                     <button class="btn" onclick="addReward()">Pridat</button>
                 </div>
@@ -448,7 +457,6 @@
                 <button class="btn btn-secondary" onclick="exportSettings()">Exportovat JSON</button>
                 <button class="btn btn-secondary" onclick="document.getElementById('importFile').click()">Importovat</button>
                 <input type="file" id="importFile" accept=".json" style="display:none" onchange="importSettings(event)">
-                <button class="btn btn-danger btn-small" onclick="resetSettings()">Resetovat</button>
             </div>
         </div>
 
@@ -481,6 +489,7 @@
 
             renderRewardsPublic(rewards);
             renderRewardsAdmin(rewards);
+            renderUsers();
         }
 
         function savePointsSettings() {
@@ -496,100 +505,16 @@
         }
 
         function renderRewardsPublic(rewards) {
-            const currentUser = localStorage.getItem('currentUser');
-            const userPoints = parseInt(localStorage.getItem('userPoints_' + currentUser)) || 0;
-
-            document.getElementById('rewardsGrid').innerHTML = rewards.map(r => {
-                const canAfford = currentUser && userPoints >= r.cost;
-                return `
-                    <div class="reward-card">
-                        <div class="reward-header">
-                            <div class="reward-icon">${r.icon}</div>
-                        </div>
-                        <div class="reward-name">${r.name}</div>
-                        <div class="reward-cost">🪙 ${r.cost.toLocaleString('cs-CZ')} bodu</div>
-                        <div class="reward-desc">${r.desc}</div>
-                        ${currentUser ? `
-                            <button class="btn" style="width: 100%; margin-top: 15px; ${!canAfford ? 'background: rgba(255,255,255,0.1); color: rgba(255,255,255,0.4); cursor: not-allowed;' : ''}" 
-                                ${!canAfford ? 'disabled' : ''} 
-                                onclick="redeemReward(${r.id}, '${r.name.replace(/'/g, "\\'")}', ${r.cost})">
-                                ${canAfford ? 'Vyzvednout' : 'Nedostatek bodu'}
-                            </button>
-                        ` : `
-                            <div style="text-align: center; margin-top: 15px; color: rgba(255,255,255,0.4); font-size: 13px;">
-                                Prihlas se pro vyzvednuti
-                            </div>
-                        `}
+            document.getElementById('rewardsGrid').innerHTML = rewards.map(r => `
+                <div class="reward-card">
+                    <div class="reward-header">
+                        <div class="reward-icon">${r.icon}</div>
                     </div>
-                `;
-            }).join('');
-        }
-
-        function loginUser() {
-            const username = document.getElementById('usernameInput').value.trim();
-            if (!username) { alert('Zadej sve Kick jmeno!'); return; }
-
-            localStorage.setItem('currentUser', username);
-
-            if (!localStorage.getItem('userPoints_' + username)) {
-                localStorage.setItem('userPoints_' + username, '0');
-            }
-
-            updateUI();
-            renderRewardsPublic(getRewards());
-        }
-
-        function logoutUser() {
-            localStorage.removeItem('currentUser');
-            updateUI();
-            renderRewardsPublic(getRewards());
-        }
-
-        function updateUI() {
-            const currentUser = localStorage.getItem('currentUser');
-            const loginForm = document.getElementById('loginForm');
-            const userStats = document.getElementById('userStats');
-
-            if (currentUser) {
-                loginForm.style.display = 'none';
-                userStats.style.display = 'flex';
-                document.getElementById('displayName').textContent = currentUser;
-                document.getElementById('userPoints').textContent = (parseInt(localStorage.getItem('userPoints_' + currentUser)) || 0).toLocaleString('cs-CZ');
-            } else {
-                loginForm.style.display = 'flex';
-                userStats.style.display = 'none';
-            }
-        }
-
-        function addDemoPoints(amount) {
-            const currentUser = localStorage.getItem('currentUser');
-            if (!currentUser) return;
-
-            const current = parseInt(localStorage.getItem('userPoints_' + currentUser)) || 0;
-            localStorage.setItem('userPoints_' + currentUser, current + amount);
-
-            document.getElementById('userPoints').textContent = (current + amount).toLocaleString('cs-CZ');
-            renderRewardsPublic(getRewards());
-        }
-
-        function redeemReward(id, name, cost) {
-            const currentUser = localStorage.getItem('currentUser');
-            if (!currentUser) return;
-
-            const currentPoints = parseInt(localStorage.getItem('userPoints_' + currentUser)) || 0;
-            if (currentPoints < cost) { alert('Nedostatek bodu!'); return; }
-
-            if (!confirm(`Opravdu vyzvednout "${name}" za ${cost.toLocaleString('cs-CZ')} bodu?`)) return;
-
-            localStorage.setItem('userPoints_' + currentUser, currentPoints - cost);
-            document.getElementById('userPoints').textContent = (currentPoints - cost).toLocaleString('cs-CZ');
-
-            const redemptions = JSON.parse(localStorage.getItem('redemptions_' + currentUser)) || [];
-            redemptions.push({ id, name, cost, date: new Date().toISOString() });
-            localStorage.setItem('redemptions_' + currentUser, JSON.stringify(redemptions));
-
-            renderRewardsPublic(getRewards());
-            alert(`Odmena "${name}" byla vyzvednuta! Streamer ji zpracuje po streamu.`);
+                    <div class="reward-name">${r.name}</div>
+                    <div class="reward-cost">🪙 ${r.cost.toLocaleString('cs-CZ')} bodu</div>
+                    <div class="reward-desc">${r.desc}</div>
+                </div>
+            `).join('');
         }
 
         function renderRewardsAdmin(rewards) {
@@ -661,6 +586,85 @@
             renderRewardsAdmin(rewards);
         }
 
+        function renderUsers() {
+            const users = JSON.parse(localStorage.getItem('users')) || {};
+            const usernames = Object.keys(users);
+            const noUsers = document.getElementById('noUsers');
+            const table = document.getElementById('usersTable');
+            const tbody = document.getElementById('usersBody');
+
+            if (usernames.length === 0) {
+                noUsers.style.display = 'block';
+                table.style.display = 'none';
+                return;
+            }
+
+            noUsers.style.display = 'none';
+            table.style.display = 'table';
+
+            tbody.innerHTML = usernames.map(username => {
+                const userData = users[username];
+                const points = userData.points || 0;
+                const redemptions = userData.redemptions || [];
+
+                return `
+                    <tr>
+                        <td><strong>${username}</strong></td>
+                        <td>
+                            <input type="number" value="${points}" id="points_${username}" min="0">
+                            <button class="btn btn-small" style="margin-left: 5px;" onclick="updatePoints('${username}')">Ulozit</button>
+                        </td>
+                        <td>
+                            <button class="btn btn-secondary btn-small" onclick="addPoints('${username}', 100)">+100</button>
+                            <button class="btn btn-secondary btn-small" onclick="addPoints('${username}', 500)">+500</button>
+                            <button class="btn btn-danger btn-small" onclick="resetPoints('${username}')">Reset</button>
+                        </td>
+                        <td>
+                            ${redemptions.length > 0 ? `
+                                <div class="redemption-list">
+                                    ${redemptions.map(r => `
+                                        <div class="redemption-item">
+                                            <span class="name">${r.name}</span> - ${r.cost} bodu
+                                        </div>
+                                    `).join('')}
+                                </div>
+                            ` : '<span style="color: rgba(255,255,255,0.3);">Zadne</span>'}
+                        </td>
+                    </tr>
+                `;
+            }).join('');
+        }
+
+        function updatePoints(username) {
+            const newPoints = parseInt(document.getElementById('points_' + username).value) || 0;
+            const users = JSON.parse(localStorage.getItem('users')) || {};
+            if (users[username]) {
+                users[username].points = newPoints;
+                localStorage.setItem('users', JSON.stringify(users));
+                renderUsers();
+            }
+        }
+
+        function addPoints(username, amount) {
+            const users = JSON.parse(localStorage.getItem('users')) || {};
+            if (users[username]) {
+                users[username].points = (users[username].points || 0) + amount;
+                localStorage.setItem('users', JSON.stringify(users));
+                renderUsers();
+            }
+        }
+
+        function resetPoints(username) {
+            if (!confirm('Resetovat body uzivatele ' + username + '?')) return;
+            const users = JSON.parse(localStorage.getItem('users')) || {};
+            if (users[username]) {
+                users[username].points = 0;
+                users[username].redemptions = [];
+                localStorage.setItem('users', JSON.stringify(users));
+                renderUsers();
+            }
+        }
+
         function exportSettings() {
             const data = {
                 points: {
@@ -669,13 +673,14 @@
                     perFollow: document.getElementById('pointsPerFollow').value,
                     perSub: document.getElementById('pointsPerSub').value
                 },
-                rewards: getRewards()
+                rewards: getRewards(),
+                users: JSON.parse(localStorage.getItem('users')) || {}
             };
             const blob = new Blob([JSON.stringify(data, null, 2)], { type: 'application/json' });
             const url = URL.createObjectURL(blob);
             const a = document.createElement('a');
             a.href = url;
-            a.download = 'kickshop-settings.json';
+            a.download = 'kickshop-backup.json';
             a.click();
         }
 
@@ -693,20 +698,13 @@
                         localStorage.setItem('pointsPerSub', data.points.perSub);
                     }
                     if (data.rewards) localStorage.setItem('rewards', JSON.stringify(data.rewards));
-        loadSettings();
-        updateUI();
+                    if (data.users) localStorage.setItem('users', JSON.stringify(data.users));
+                    loadSettings();
                     alert('Nastaveni importovano!');
                 } catch (err) { alert('Chyba: ' + err.message); }
             };
             reader.readAsText(file);
             event.target.value = '';
-        }
-
-        function resetSettings() {
-            if (!confirm('Resetovat vse?')) return;
-            localStorage.clear();
-            loadSettings();
-            alert('Hotovo!');
         }
 
         function toggleAdmin() {
