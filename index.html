@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Kick Shop - Nastaveni</title>
+    <title>Kick Shop</title>
     <style>
         * { margin: 0; padding: 0; box-sizing: border-box; }
 
@@ -50,11 +50,7 @@
         .setting-label h4 { font-size: 16px; margin-bottom: 4px; }
         .setting-label p { color: rgba(255,255,255,0.5); font-size: 13px; }
 
-        .setting-input {
-            display: flex;
-            align-items: center;
-            gap: 10px;
-        }
+        .setting-input { display: flex; align-items: center; gap: 10px; }
 
         .setting-input input {
             width: 80px;
@@ -92,16 +88,110 @@
 
         .btn-secondary:hover { background: rgba(255,255,255,0.15); }
 
-        .btn-danger {
-            background: #ff4757;
-            color: #fff;
-        }
-
+        .btn-danger { background: #ff4757; color: #fff; }
         .btn-danger:hover { background: #ff3344; }
 
         .btn-small { padding: 8px 16px; font-size: 12px; }
 
-        .rewards-list { margin-top: 20px; }
+        .commands-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
+            gap: 15px;
+            margin-bottom: 25px;
+        }
+
+        .command-card {
+            background: rgba(83,252,24,0.1);
+            border: 1px solid rgba(83,252,24,0.3);
+            border-radius: 10px;
+            padding: 15px;
+            text-align: center;
+        }
+
+        .command-card .cmd {
+            font-family: monospace;
+            font-size: 16px;
+            color: #53fc18;
+            font-weight: 600;
+            margin-bottom: 8px;
+        }
+
+        .command-card .desc {
+            color: rgba(255,255,255,0.6);
+            font-size: 12px;
+        }
+
+        .how-it-works {
+            padding: 20px;
+            background: rgba(255,255,255,0.03);
+            border-radius: 10px;
+        }
+
+        .how-it-works h4 { color: #53fc18; margin-bottom: 15px; }
+
+        .how-it-works ol {
+            color: rgba(255,255,255,0.6);
+            font-size: 13px;
+            padding-left: 20px;
+            line-height: 2;
+        }
+
+        .how-it-works span { color: #53fc18; font-family: monospace; }
+
+        .rewards-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+            gap: 20px;
+        }
+
+        .reward-card {
+            background: rgba(255,255,255,0.05);
+            border-radius: 16px;
+            padding: 25px;
+            border: 1px solid rgba(255,255,255,0.1);
+            transition: all 0.3s ease;
+        }
+
+        .reward-card:hover {
+            transform: translateY(-5px);
+            border-color: #53fc18;
+            box-shadow: 0 10px 30px rgba(83,252,24,0.2);
+        }
+
+        .reward-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: 15px;
+        }
+
+        .reward-icon { font-size: 32px; }
+
+        .reward-name { font-size: 16px; font-weight: 600; margin-bottom: 8px; }
+        .reward-cost { color: #53fc18; font-size: 14px; font-weight: 600; margin-bottom: 10px; }
+        .reward-desc { color: rgba(255,255,255,0.6); font-size: 13px; line-height: 1.4; }
+
+        .admin-toggle {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            background: rgba(255,255,255,0.1);
+            border: 1px solid rgba(255,255,255,0.2);
+            color: #fff;
+            padding: 12px 20px;
+            border-radius: 10px;
+            cursor: pointer;
+            font-size: 14px;
+            z-index: 100;
+            backdrop-filter: blur(10px);
+        }
+
+        .admin-toggle:hover { background: rgba(255,255,255,0.15); }
+
+        .admin-panel { display: none; }
+        .admin-panel.show { display: block; }
+
+        .rewards-list-admin { margin-top: 20px; }
 
         .reward-item {
             display: flex;
@@ -114,17 +204,17 @@
             border: 1px solid rgba(255,255,255,0.05);
         }
 
-        .reward-icon { font-size: 24px; }
+        .reward-item .icon { font-size: 24px; }
 
-        .reward-info { flex: 1; }
-        .reward-info h4 { font-size: 14px; margin-bottom: 4px; }
-        .reward-info p { color: rgba(255,255,255,0.5); font-size: 12px; }
+        .reward-item .info { flex: 1; }
+        .reward-item .info h4 { font-size: 14px; margin-bottom: 4px; }
+        .reward-item .info p { color: rgba(255,255,255,0.5); font-size: 12px; }
 
-        .reward-cost { color: #53fc18; font-weight: 600; font-size: 14px; }
+        .reward-item .cost { color: #53fc18; font-weight: 600; font-size: 14px; }
 
-        .reward-actions { display: flex; gap: 8px; }
+        .reward-item .actions { display: flex; gap: 8px; }
 
-        .add-reward-form {
+        .add-form {
             margin-top: 20px;
             padding: 20px;
             background: rgba(255,255,255,0.03);
@@ -132,13 +222,9 @@
             border: 1px dashed rgba(255,255,255,0.2);
         }
 
-        .add-reward-form h4 { margin-bottom: 15px; }
+        .add-form h4 { margin-bottom: 15px; }
 
-        .form-row {
-            display: flex;
-            gap: 10px;
-            margin-bottom: 10px;
-        }
+        .form-row { display: flex; gap: 10px; margin-bottom: 10px; }
 
         .form-row input, .form-row select {
             flex: 1;
@@ -151,14 +237,7 @@
         }
 
         .form-row input:focus, .form-row select:focus { outline: none; border-color: #53fc18; }
-
         .form-row select option { background: #1a1a2e; }
-
-        .actions-bar {
-            display: flex;
-            gap: 10px;
-            margin-top: 20px;
-        }
 
         .success-msg {
             display: none;
@@ -173,6 +252,8 @@
 
         .success-msg.show { display: block; }
 
+        .actions-bar { display: flex; gap: 10px; margin-top: 20px; }
+
         .footer {
             text-align: center;
             margin-top: 30px;
@@ -185,46 +266,81 @@
 
         .footer a { color: #53fc18; text-decoration: none; }
 
-        .icon-options {
-            display: flex;
-            gap: 8px;
-            flex-wrap: wrap;
-            margin-top: 5px;
+        .divider {
+            height: 1px;
+            background: rgba(255,255,255,0.1);
+            margin: 25px 0;
         }
 
-        .icon-option {
-            width: 36px;
-            height: 36px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            background: rgba(255,255,255,0.05);
-            border: 2px solid transparent;
-            border-radius: 8px;
-            cursor: pointer;
-            font-size: 18px;
-            transition: all 0.2s;
+        .admin-label {
+            display: inline-block;
+            background: rgba(255,165,0,0.2);
+            border: 1px solid rgba(255,165,0,0.4);
+            color: orange;
+            padding: 4px 10px;
+            border-radius: 6px;
+            font-size: 11px;
+            margin-left: 10px;
         }
-
-        .icon-option:hover { border-color: rgba(255,255,255,0.3); }
-        .icon-option.selected { border-color: #53fc18; background: rgba(83,252,24,0.1); }
     </style>
 </head>
 <body>
     <div class="container">
         <div class="header">
             <div class="logo">🎮</div>
-            <h1>Kick Shop - Nastaveni</h1>
-            <p class="subtitle">Nastav body a odmeny pro sve divaky</p>
+            <h1>Kick Shop</h1>
+            <p class="subtitle">Ziskej body za sledovani a vymen je za odmeny</p>
         </div>
 
         <div class="section">
-            <h2>⚙️ Nastaveni bodu</h2>
+            <h2>📍 Prikazy pro chat</h2>
+            <div class="commands-grid">
+                <div class="command-card">
+                    <div class="cmd">!points</div>
+                    <div class="desc">Zobrazit zustatek bodu</div>
+                </div>
+                <div class="command-card">
+                    <div class="cmd">!shop</div>
+                    <div class="desc">Otevrit shop</div>
+                </div>
+                <div class="command-card">
+                    <div class="cmd">!redeem [id]</div>
+                    <div class="desc">Vymenit za odmenu</div>
+                </div>
+                <div class="command-card">
+                    <div class="cmd">!level</div>
+                    <div class="desc">Zobrazit uroven</div>
+                </div>
+                <div class="command-card">
+                    <div class="cmd">!top</div>
+                    <div class="desc">Leaderboard</div>
+                </div>
+            </div>
+
+            <div class="how-it-works">
+                <h4> Jak to funguje?</h4>
+                <ol>
+                    <li>Sleduj stream a sbiras body za <span>!points</span></li>
+                    <li>Pis do chatu a ziskej bonusove body kazdych <span>10 minut</span></li>
+                    <li>Napis <span>!shop</span> a podivej se na odmeny</li>
+                    <li>Napis <span>!redeem [id]</span> a vymen body za odmenu</li>
+                    <li>Odmenu ti streamer posle po streamu</li>
+                </ol>
+            </div>
+        </div>
+
+        <div class="section">
+            <h2> Dostupne odmeny</h2>
+            <div id="rewardsGrid" class="rewards-grid"></div>
+        </div>
+
+        <div class="section admin-panel" id="adminPanel">
+            <h2>⚙️ Nastaveni bodu <span class="admin-label">ADMIN</span></h2>
 
             <div class="setting-row">
                 <div class="setting-label">
                     <h4>Body za minutu sledovani</h4>
-                    <p>Kolik bodu divak dostane za kazdou minutu sledovani</p>
+                    <p>Kolik bodu za kazdou minutu sledovani</p>
                 </div>
                 <div class="setting-input">
                     <input type="number" id="pointsPerMinute" value="10" min="1" max="100">
@@ -235,7 +351,7 @@
             <div class="setting-row">
                 <div class="setting-label">
                     <h4>Body za chat (kazdych 10 min)</h4>
-                    <p>Kolik bodu divak dostane za aktivitu v chatu kazdych 10 minut</p>
+                    <p>Bonus za aktivitu v chatu</p>
                 </div>
                 <div class="setting-input">
                     <input type="number" id="pointsPerMessage" value="5" min="1" max="50">
@@ -246,7 +362,7 @@
             <div class="setting-row">
                 <div class="setting-label">
                     <h4>Body za follow</h4>
-                    <p>Jednorazove body za follow (1 = zabrani zneuziti)</p>
+                    <p>Jednorazove (1 = zabrani zneuziti)</p>
                 </div>
                 <div class="setting-input">
                     <input type="number" id="pointsPerFollow" value="1" min="1" max="100">
@@ -257,7 +373,7 @@
             <div class="setting-row">
                 <div class="setting-label">
                     <h4>Body za subscription</h4>
-                    <p>Kolik bodu divak dostane za sub</p>
+                    <p>Bonus za sub</p>
                 </div>
                 <div class="setting-input">
                     <input type="number" id="pointsPerSub" value="500" min="50" max="5000">
@@ -265,18 +381,15 @@
                 </div>
             </div>
 
-            <div class="actions-bar">
-                <button class="btn" onclick="savePointsSettings()">Ulozit nastaveni bodu</button>
-            </div>
+            <button class="btn" onclick="savePointsSettings()">Ulozit nastaveni bodu</button>
             <div id="pointsSuccess" class="success-msg">Nastaveni bodu ulozeno!</div>
-        </div>
 
-        <div class="section">
-            <h2>🎁 Sprava odmen</h2>
+            <div class="divider"></div>
 
-            <div id="rewardsList" class="rewards-list"></div>
+            <h2>Sprava odmen</h2>
+            <div id="rewardsListAdmin" class="rewards-list-admin"></div>
 
-            <div class="add-reward-form">
+            <div class="add-form">
                 <h4>➕ Pridat novou odmenu</h4>
                 <div class="form-row">
                     <input type="text" id="newRewardName" placeholder="Nazev odmeny">
@@ -293,7 +406,7 @@
                         <option value="🎮">🎮 Hra</option>
                         <option value="⭐">⭐ Hvezda</option>
                         <option value="💎">💎 Diamant</option>
-                        <option value="🔥"> khỏ Ohen</option>
+                        <option value="🔥">🔥 Ohen</option>
                         <option value="👕">👕 Merch</option>
                         <option value="💬">💬 Chat</option>
                         <option value="🎯">🎯 Cil</option>
@@ -307,67 +420,24 @@
                 </div>
             </div>
             <div id="rewardsSuccess" class="success-msg">Odmena pridana!</div>
-        </div>
 
-        <div class="section">
-            <h2>📍 Instrukce pro divaky</h2>
-            <p style="color: rgba(255,255,255,0.6); margin-bottom: 20px;">
-                Tuto stranku muzes dat divakum jako napovedu. Obsahuje prikazy pro BotRix.
-            </p>
+            <div class="divider"></div>
 
-            <div style="display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 15px;">
-                <div style="background: rgba(83,252,24,0.1); border: 1px solid rgba(83,252,24,0.3); border-radius: 10px; padding: 15px; text-align: center;">
-                    <div style="font-family: monospace; font-size: 18px; color: #53fc18; font-weight: 600; margin-bottom: 8px;">!points</div>
-                    <div style="color: rgba(255,255,255,0.6); font-size: 13px;">Zobrazit svuj zustatek bodu</div>
-                </div>
-                <div style="background: rgba(83,252,24,0.1); border: 1px solid rgba(83,252,24,0.3); border-radius: 10px; padding: 15px; text-align: center;">
-                    <div style="font-family: monospace; font-size: 18px; color: #53fc18; font-weight: 600; margin-bottom: 8px;">!shop</div>
-                    <div style="color: rgba(255,255,255,0.6); font-size: 13px;">Otevrit shop s odmenami</div>
-                </div>
-                <div style="background: rgba(83,252,24,0.1); border: 1px solid rgba(83,252,24,0.3); border-radius: 10px; padding: 15px; text-align: center;">
-                    <div style="font-family: monospace; font-size: 18px; color: #53fc18; font-weight: 600; margin-bottom: 8px;">!redeem [id]</div>
-                    <div style="color: rgba(255,255,255,0.6); font-size: 13px;">Vymenit body za odmenu</div>
-                </div>
-                <div style="background: rgba(83,252,24,0.1); border: 1px solid rgba(83,252,24,0.3); border-radius: 10px; padding: 15px; text-align: center;">
-                    <div style="font-family: monospace; font-size: 18px; color: #53fc18; font-weight: 600; margin-bottom: 8px;">!level</div>
-                    <div style="color: rgba(255,255,255,0.6); font-size: 13px;">Zobrazit svou uroven</div>
-                </div>
-                <div style="background: rgba(83,252,24,0.1); border: 1px solid rgba(83,252,24,0.3); border-radius: 10px; padding: 15px; text-align: center;">
-                    <div style="font-family: monospace; font-size: 18px; color: #53fc18; font-weight: 600; margin-bottom: 8px;">!top</div>
-                    <div style="color: rgba(255,255,255,0.6); font-size: 13px;">Leaderboard hracu</div>
-                </div>
-            </div>
-
-            <div style="margin-top: 20px; padding: 15px; background: rgba(255,255,255,0.03); border-radius: 10px;">
-                <h4 style="color: #53fc18; margin-bottom: 10px;">Jak to funguje?</h4>
-                <ol style="color: rgba(255,255,255,0.6); font-size: 13px; padding-left: 20px; line-height: 1.8;">
-                    <li>Sleduj stream a automaticky sbiras body za kazdou minutu</li>
-                    <li>Pis do chatu a ziskej bonusove body kazdych 10 minut</li>
-                    <li>Napis <span style="color: #53fc18;">!shop</span> a podivej se na dostupne odmeny</li>
-                    <li>Napis <span style="color: #53fc18;">!redeem [id]</span> a vymen body za odmenu</li>
-                    <li>Odmenu ti streamer posle po streamu</li>
-                </ol>
-            </div>
-        </div>
-
-        <div class="section">
-            <h2>📤 Export / Import nastaveni</h2>
-            <p style="color: rgba(255,255,255,0.5); font-size: 13px; margin-bottom: 15px;">
-                Zalohuj sve nastaveni nebo ho prenes na jine zarizeni
-            </p>
+            <h2>📤 Export / Import</h2>
             <div class="actions-bar">
-                <button class="btn btn-secondary" onclick="exportSettings()">Exportovat (JSON)</button>
+                <button class="btn btn-secondary" onclick="exportSettings()">Exportovat JSON</button>
                 <button class="btn btn-secondary" onclick="document.getElementById('importFile').click()">Importovat</button>
                 <input type="file" id="importFile" accept=".json" style="display:none" onchange="importSettings(event)">
-                <button class="btn btn-danger btn-small" onclick="resetSettings()">Resetovat vse</button>
+                <button class="btn btn-danger btn-small" onclick="resetSettings()">Resetovat</button>
             </div>
         </div>
 
         <div class="footer">
-            Spravovano pres <a href="https://botrix.live" target="_blank">BotRix</a> |
-            Nastaveni se uklada v prohlizeci
+            Spravovano pres <a href="https://botrix.live" target="_blank">BotRix</a>
         </div>
     </div>
+
+    <button class="admin-toggle" onclick="toggleAdmin()">⚙️ Admin</button>
 
     <script>
         const DEFAULT_REWARDS = [
@@ -378,24 +448,19 @@
         ];
 
         function loadSettings() {
-            const points = {
-                perMinute: parseInt(localStorage.getItem('pointsPerMinute')) || 10,
-                perMessage: parseInt(localStorage.getItem('pointsPerMessage')) || 5,
-                perFollow: parseInt(localStorage.getItem('pointsPerFollow')) || 1,
-                perSub: parseInt(localStorage.getItem('pointsPerSub')) || 500
-            };
-
-            document.getElementById('pointsPerMinute').value = points.perMinute;
-            document.getElementById('pointsPerMessage').value = points.perMessage;
-            document.getElementById('pointsPerFollow').value = points.perFollow;
-            document.getElementById('pointsPerSub').value = points.perSub;
+            document.getElementById('pointsPerMinute').value = localStorage.getItem('pointsPerMinute') || 10;
+            document.getElementById('pointsPerMessage').value = localStorage.getItem('pointsPerMessage') || 5;
+            document.getElementById('pointsPerFollow').value = localStorage.getItem('pointsPerFollow') || 1;
+            document.getElementById('pointsPerSub').value = localStorage.getItem('pointsPerSub') || 500;
 
             let rewards = JSON.parse(localStorage.getItem('rewards'));
             if (!rewards) {
                 rewards = DEFAULT_REWARDS;
                 localStorage.setItem('rewards', JSON.stringify(rewards));
             }
-            renderRewards(rewards);
+
+            renderRewardsPublic(rewards);
+            renderRewardsAdmin(rewards);
         }
 
         function savePointsSettings() {
@@ -410,17 +475,29 @@
             return JSON.parse(localStorage.getItem('rewards')) || DEFAULT_REWARDS;
         }
 
-        function renderRewards(rewards) {
-            const list = document.getElementById('rewardsList');
-            list.innerHTML = rewards.map(r => `
+        function renderRewardsPublic(rewards) {
+            document.getElementById('rewardsGrid').innerHTML = rewards.map(r => `
+                <div class="reward-card">
+                    <div class="reward-header">
+                        <div class="reward-icon">${r.icon}</div>
+                    </div>
+                    <div class="reward-name">${r.name}</div>
+                    <div class="reward-cost">🪙 ${r.cost.toLocaleString('cs-CZ')} bodu</div>
+                    <div class="reward-desc">${r.desc}</div>
+                </div>
+            `).join('');
+        }
+
+        function renderRewardsAdmin(rewards) {
+            document.getElementById('rewardsListAdmin').innerHTML = rewards.map(r => `
                 <div class="reward-item">
-                    <div class="reward-icon">${r.icon}</div>
-                    <div class="reward-info">
+                    <div class="icon">${r.icon}</div>
+                    <div class="info">
                         <h4>${r.name}</h4>
                         <p>${r.desc}</p>
                     </div>
-                    <div class="reward-cost">🪙 ${r.cost.toLocaleString('cs-CZ')}</div>
-                    <div class="reward-actions">
+                    <div class="cost">🪙 ${r.cost.toLocaleString('cs-CZ')}</div>
+                    <div class="actions">
                         <button class="btn btn-secondary btn-small" onclick="editReward(${r.id})">Upravit</button>
                         <button class="btn btn-danger btn-small" onclick="deleteReward(${r.id})">Smazat</button>
                     </div>
@@ -434,17 +511,15 @@
             const desc = document.getElementById('newRewardDesc').value.trim();
             const icon = document.getElementById('newRewardIcon').value;
 
-            if (!name || !cost) {
-                alert('Vypln nazev a cenu!');
-                return;
-            }
+            if (!name || !cost) { alert('Vypln nazev a cenu!'); return; }
 
             const rewards = getRewards();
             const newId = rewards.length > 0 ? Math.max(...rewards.map(r => r.id)) + 1 : 1;
             rewards.push({ id: newId, name, cost, desc, icon });
 
             localStorage.setItem('rewards', JSON.stringify(rewards));
-            renderRewards(rewards);
+            renderRewardsPublic(rewards);
+            renderRewardsAdmin(rewards);
 
             document.getElementById('newRewardName').value = '';
             document.getElementById('newRewardCost').value = '';
@@ -460,10 +535,8 @@
 
             const newName = prompt('Nazev odmeny:', reward.name);
             if (newName === null) return;
-
             const newCost = prompt('Cena v bodech:', reward.cost);
             if (newCost === null) return;
-
             const newDesc = prompt('Popis:', reward.desc);
             if (newDesc === null) return;
 
@@ -472,17 +545,16 @@
             reward.desc = newDesc;
 
             localStorage.setItem('rewards', JSON.stringify(rewards));
-            renderRewards(rewards);
+            renderRewardsPublic(rewards);
+            renderRewardsAdmin(rewards);
         }
 
         function deleteReward(id) {
-            if (!confirm('Opravdu smazat tuto odmenu?')) return;
-
-            let rewards = getRewards();
-            rewards = rewards.filter(r => r.id !== id);
-
+            if (!confirm('Opravdu smazat?')) return;
+            let rewards = getRewards().filter(r => r.id !== id);
             localStorage.setItem('rewards', JSON.stringify(rewards));
-            renderRewards(rewards);
+            renderRewardsPublic(rewards);
+            renderRewardsAdmin(rewards);
         }
 
         function exportSettings() {
@@ -495,57 +567,45 @@
                 },
                 rewards: getRewards()
             };
-
             const blob = new Blob([JSON.stringify(data, null, 2)], { type: 'application/json' });
             const url = URL.createObjectURL(blob);
             const a = document.createElement('a');
             a.href = url;
             a.download = 'kickshop-settings.json';
             a.click();
-            URL.revokeObjectURL(url);
         }
 
         function importSettings(event) {
             const file = event.target.files[0];
             if (!file) return;
-
             const reader = new FileReader();
             reader.onload = function(e) {
                 try {
                     const data = JSON.parse(e.target.result);
-
                     if (data.points) {
                         localStorage.setItem('pointsPerMinute', data.points.perMinute);
                         localStorage.setItem('pointsPerMessage', data.points.perMessage);
                         localStorage.setItem('pointsPerFollow', data.points.perFollow);
                         localStorage.setItem('pointsPerSub', data.points.perSub);
                     }
-
-                    if (data.rewards) {
-                        localStorage.setItem('rewards', JSON.stringify(data.rewards));
-                    }
-
+                    if (data.rewards) localStorage.setItem('rewards', JSON.stringify(data.rewards));
                     loadSettings();
                     alert('Nastaveni importovano!');
-                } catch (err) {
-                    alert('Chyba pri importu: ' + err.message);
-                }
+                } catch (err) { alert('Chyba: ' + err.message); }
             };
             reader.readAsText(file);
             event.target.value = '';
         }
 
         function resetSettings() {
-            if (!confirm('Opravdu resetovat vsechno nastaveni?')) return;
-
-            localStorage.removeItem('pointsPerMinute');
-            localStorage.removeItem('pointsPerMessage');
-            localStorage.removeItem('pointsPerFollow');
-            localStorage.removeItem('pointsPerSub');
-            localStorage.removeItem('rewards');
-
+            if (!confirm('Resetovat vse?')) return;
+            localStorage.clear();
             loadSettings();
-            alert('Nastaveni resetovano!');
+            alert('Hotovo!');
+        }
+
+        function toggleAdmin() {
+            document.getElementById('adminPanel').classList.toggle('show');
         }
 
         function showSuccess(id) {
