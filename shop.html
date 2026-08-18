@@ -483,6 +483,10 @@
                         <option value="💬">💬 Chat</option>
                         <option value="🎯">🎯 Cil</option>
                     </select>
+                    <select id="newRewardUnlimited">
+                        <option value="false">1x vyzvednuti</option>
+                        <option value="true">Nekonecno vyzvednuti</option>
+                    </select>
                     <button class="btn" onclick="addReward()">Pridat</button>
                 </div>
             </div>
@@ -503,7 +507,7 @@
         </div>
     </div>
 
-    <button class="admin-toggle" onclick="toggleAdmin()">⚙️ Admin</button>
+    <button class="admin-toggle" id="adminBtn" onclick="toggleAdmin()" style="display: none;">⚙️ Admin</button>
 
     <div class="modal-overlay" id="redeemModal">
         <div class="modal">
@@ -518,11 +522,13 @@
 
     <script>
         const DEFAULT_REWARDS = [
-            { id: 1, name: 'OG na mem discord serveru', cost: 30000, desc: 'Ziskej titulek OG na discord serveru', icon: '👑' },
-            { id: 2, name: 'Pridam si te', cost: 10000, desc: 'Pridam si te ve Epic Games nebo na Steamu', icon: '🎮' },
-            { id: 3, name: 'KING na mem discord serveru', cost: 50000, desc: 'Ziskej titulek KING na discord serveru', icon: '🏆' },
-            { id: 4, name: '10 kc na moji stranku s bednam', cost: 10000, desc: 'Odkaz na stranku s bednam', icon: '🎁' }
+            { id: 1, name: 'OG na mem discord serveru', cost: 30000, desc: 'Ziskej titulek OG na discord serveru', icon: '👑', unlimited: false },
+            { id: 2, name: 'Pridam si te', cost: 10000, desc: 'Pridam si te ve Epic Games nebo na Steamu', icon: '🎮', unlimited: false },
+            { id: 3, name: 'KING na mem discord serveru', cost: 50000, desc: 'Ziskej titulek KING na discord serveru', icon: '🏆', unlimited: false },
+            { id: 4, name: '10 kc na moji stranku s bednam', cost: 10000, desc: 'Odkaz na stranku s bednam', icon: '🎁', unlimited: false }
         ];
+
+        const ADMIN_USER = 'Petrak7';
 
         let pendingRedeem = null;
 
@@ -555,6 +561,11 @@
 
             loadSettings();
             updateUserUI();
+
+            // Show admin button only for admin
+            if (currentUser === ADMIN_USER) {
+                document.getElementById('adminBtn').style.display = 'block';
+            }
         }
 
         function updateUserUI() {
@@ -608,25 +619,38 @@
             const currentUser = localStorage.getItem('currentUser');
             const users = JSON.parse(localStorage.getItem('users')) || {};
             const user = users[currentUser] || { points: 0, redemptions: [] };
-            const redeemedIds = (user.redemptions || []).map(r => r.id);
+            const redemptions = user.redemptions || [];
 
             document.getElementById('rewardsGrid').innerHTML = rewards.map(r => {
                 const canAfford = user.points >= r.cost;
-                const alreadyRedeemed = redeemedIds.includes(r.id);
+                const redeemCount = redemptions.filter(red => red.id === r.id).length;
+                const isUnlimited = r.unlimited === true;
 
                 let btnClass, btnText, btnDisabled;
-                if (alreadyRedeemed) {
-                    btnClass = 'redeemed';
-                    btnText = '✓ Vyzvednuto';
-                    btnDisabled = true;
-                } else if (canAfford) {
-                    btnClass = 'can-afford';
-                    btnText = 'Vyzvednout';
-                    btnDisabled = false;
+                if (isUnlimited) {
+                    if (canAfford) {
+                        btnClass = 'can-afford';
+                        btnText = redeemCount > 0 ? `Vyzvednout (${redeemCount}x)` : 'Vyzvednout';
+                        btnDisabled = false;
+                    } else {
+                        btnClass = 'cannot-afford';
+                        btnText = 'Nedostatek bodu';
+                        btnDisabled = true;
+                    }
                 } else {
-                    btnClass = 'cannot-afford';
-                    btnText = 'Nedostatek bodu';
-                    btnDisabled = true;
+                    if (redeemCount > 0) {
+                        btnClass = 'redeemed';
+                        btnText = '✓ Vyzvednuto';
+                        btnDisabled = true;
+                    } else if (canAfford) {
+                        btnClass = 'can-afford';
+                        btnText = 'Vyzvednout';
+                        btnDisabled = false;
+                    } else {
+                        btnClass = 'cannot-afford';
+                        btnText = 'Nedostatek bodu';
+                        btnDisabled = true;
+                    }
                 }
 
                 return `
@@ -635,7 +659,7 @@
                             <div class="reward-icon">${r.icon}</div>
                         </div>
                         <div class="reward-name">${r.name}</div>
-                        <div class="reward-cost">🪙 ${r.cost.toLocaleString('cs-CZ')} bodu</div>
+                        <div class="reward-cost">🪙 ${r.cost.toLocaleString('cs-CZ')} bodu ${isUnlimited ? '<span style="color: rgba(255,255,255,0.4); font-size: 11px;">(nekonecno)</span>' : ''}</div>
                         <div class="reward-desc">${r.desc}</div>
                         <button class="redeem-btn ${btnClass}" ${btnDisabled ? 'disabled' : ''} onclick="openRedeemModal(${r.id}, '${r.name.replace(/'/g, "\\'")}', ${r.cost})">
                             ${btnText}
@@ -727,12 +751,13 @@
             const cost = parseInt(document.getElementById('newRewardCost').value);
             const desc = document.getElementById('newRewardDesc').value.trim();
             const icon = document.getElementById('newRewardIcon').value;
+            const unlimited = document.getElementById('newRewardUnlimited').value === 'true';
 
             if (!name || !cost) { alert('Vypln nazev a cenu!'); return; }
 
             const rewards = getRewards();
             const newId = rewards.length > 0 ? Math.max(...rewards.map(r => r.id)) + 1 : 1;
-            rewards.push({ id: newId, name, cost, desc, icon });
+            rewards.push({ id: newId, name, cost, desc, icon, unlimited });
 
             localStorage.setItem('rewards', JSON.stringify(rewards));
             renderRewardsPublic(rewards);
