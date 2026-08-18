@@ -782,7 +782,7 @@
                 if (isUnlimited) {
                     if (canAfford) {
                         btnClass = 'can-afford';
-                        btnText = isRedeemCount > 0 ? `Vyzvednout znovu (${redeemCount}x)` : 'Vyzvednout';
+                        btnText = redeemCount > 0 ? `Vyzvednout znovu (${redeemCount}x)` : 'Vyzvednout';
                         btnDisabled = false;
                     } else {
                         btnClass = 'cannot-afford';
