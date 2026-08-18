@@ -662,7 +662,9 @@
             const available = availableCodes.filter(c => c.value === value);
             if (available.length === 0) return null;
 
-            const selected = available[0];
+            const randomIndex = Math.floor(Math.random() * available.length);
+            const selected = available[randomIndex];
+
             const usedCodes = JSON.parse(localStorage.getItem('usedCodes')) || [];
             usedCodes.push(selected.code);
             localStorage.setItem('usedCodes', JSON.stringify(usedCodes));
