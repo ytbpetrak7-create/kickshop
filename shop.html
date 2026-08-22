@@ -585,7 +585,7 @@
                     </select>
                 </div>
                 <div class="form-row">
-                    <input type="text" id="newRewardCode" placeholder="Kod (nepovinne - pro 10kc+ se bere z tabulky)">
+                    <input type="text" id="newRewardCode" placeholder="Kod (nepovinne - pro 1000+ se bere z tabulky)">
                     <button class="btn" onclick="addReward()">Pridat</button>
                 </div>
             </div>
@@ -912,8 +912,8 @@
 
             let code = pendingRedeem.code || '';
             console.log('Redeem cost:', pendingRedeem.cost, 'existing code:', code, 'available codes:', availableCodes.length);
-            if (!code && pendingRedeem.cost >= 10000) {
-                const value = pendingRedeem.cost / 1000;
+            if (!code && pendingRedeem.cost >= 1000) {
+                const value = pendingRedeem.cost / 100;
                 console.log('Fetching code for value:', value);
                 code = getCodeForValue(value) || '';
                 console.log('Got code:', code);
