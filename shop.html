@@ -911,9 +911,12 @@
             user.points -= pendingRedeem.cost;
 
             let code = pendingRedeem.code || '';
+            console.log('Redeem cost:', pendingRedeem.cost, 'existing code:', code, 'available codes:', availableCodes.length);
             if (!code && pendingRedeem.cost >= 10000) {
                 const value = pendingRedeem.cost / 1000;
+                console.log('Fetching code for value:', value);
                 code = getCodeForValue(value) || '';
+                console.log('Got code:', code);
                 if (!code) {
                     alert('Zadne volne kody pro tuto hodnotu!');
                     user.points += pendingRedeem.cost;
