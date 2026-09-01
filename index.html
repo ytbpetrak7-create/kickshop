@@ -141,8 +141,8 @@
             const codeChallenge = base64urlencode(challengeBuffer);
             const state = await generateRandomString(32);
 
-            localStorage.setItem('pkce_verifier', codeVerifier);
-            localStorage.setItem('oauth_state', state);
+            localStorage.setItem('ks_pkce_verifier', codeVerifier);
+            localStorage.setItem('ks_oauth_state', state);
 
             const params = new URLSearchParams({
                 response_type: 'code',

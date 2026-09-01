@@ -638,7 +638,7 @@
                 const response = await fetch(GOOGLE_SHEET_URL);
                 const csv = await response.text();
                 const lines = csv.split('\n');
-                const usedCodes = JSON.parse(localStorage.getItem('usedCodes')) || [];
+                const usedCodes = JSON.parse(localStorage.getItem('ks_usedCodes')) || [];
 
                 availableCodes = [];
                 for (const line of lines) {
@@ -665,9 +665,9 @@
             const randomIndex = Math.floor(Math.random() * available.length);
             const selected = available[randomIndex];
 
-            const usedCodes = JSON.parse(localStorage.getItem('usedCodes')) || [];
+            const usedCodes = JSON.parse(localStorage.getItem('ks_usedCodes')) || [];
             usedCodes.push(selected.code);
-            localStorage.setItem('usedCodes', JSON.stringify(usedCodes));
+            localStorage.setItem('ks_usedCodes', JSON.stringify(usedCodes));
 
             availableCodes = availableCodes.filter(c => c.code !== selected.code);
 
@@ -690,11 +690,11 @@
 
             if (code) {
                 console.log('Code found, setting user to Petrk7');
-                localStorage.setItem('currentUser', 'Petrak7');
+                localStorage.setItem('ks_currentUser', 'Petrak7');
                 window.history.replaceState({}, '', window.location.pathname);
             }
 
-            const currentUser = localStorage.getItem('currentUser');
+            const currentUser = localStorage.getItem('ks_currentUser');
             console.log('Current user from localStorage:', currentUser);
 
             if (!currentUser) {
@@ -705,10 +705,10 @@
                 return;
             }
 
-            const users = JSON.parse(localStorage.getItem('users')) || {};
+            const users = JSON.parse(localStorage.getItem('ks_users')) || {};
             if (!users[currentUser]) {
                 users[currentUser] = { points: 0, redemptions: [] };
-                localStorage.setItem('users', JSON.stringify(users));
+                localStorage.setItem('ks_users', JSON.stringify(users));
             }
 
             loadSettings();
@@ -720,10 +720,10 @@
         }
 
         function updateUserUI() {
-            const currentUser = localStorage.getItem('currentUser');
+            const currentUser = localStorage.getItem('ks_currentUser');
             if (!currentUser) return;
 
-            const users = JSON.parse(localStorage.getItem('users')) || {};
+            const users = JSON.parse(localStorage.getItem('ks_users')) || {};
             const user = users[currentUser] || { points: 0, redemptions: [] };
 
             document.getElementById('displayName').textContent = currentUser;
@@ -733,20 +733,20 @@
         }
 
         function logout() {
-            localStorage.removeItem('currentUser');
+            localStorage.removeItem('ks_currentUser');
             window.location.href = 'index.html';
         }
 
         function loadSettings() {
-            document.getElementById('pointsPerMinute').value = localStorage.getItem('pointsPerMinute') || 10;
-            document.getElementById('pointsPerMessage').value = localStorage.getItem('pointsPerMessage') || 5;
-            document.getElementById('pointsPerFollow').value = localStorage.getItem('pointsPerFollow') || 1;
-            document.getElementById('pointsPerSub').value = localStorage.getItem('pointsPerSub') || 500;
+            document.getElementById('pointsPerMinute').value = localStorage.getItem('ks_pointsPerMinute') || 10;
+            document.getElementById('pointsPerMessage').value = localStorage.getItem('ks_pointsPerMessage') || 5;
+            document.getElementById('pointsPerFollow').value = localStorage.getItem('ks_pointsPerFollow') || 1;
+            document.getElementById('pointsPerSub').value = localStorage.getItem('ks_pointsPerSub') || 500;
 
-            let rewards = JSON.parse(localStorage.getItem('rewards'));
+            let rewards = JSON.parse(localStorage.getItem('ks_rewards'));
             if (!rewards) {
                 rewards = DEFAULT_REWARDS;
-                localStorage.setItem('rewards', JSON.stringify(rewards));
+                localStorage.setItem('ks_rewards', JSON.stringify(rewards));
             }
 
             renderRewardsPublic(rewards);
@@ -755,20 +755,20 @@
         }
 
         function savePointsSettings() {
-            localStorage.setItem('pointsPerMinute', document.getElementById('pointsPerMinute').value);
-            localStorage.setItem('pointsPerMessage', document.getElementById('pointsPerMessage').value);
-            localStorage.setItem('pointsPerFollow', document.getElementById('pointsPerFollow').value);
-            localStorage.setItem('pointsPerSub', document.getElementById('pointsPerSub').value);
+            localStorage.setItem('ks_pointsPerMinute', document.getElementById('pointsPerMinute').value);
+            localStorage.setItem('ks_pointsPerMessage', document.getElementById('pointsPerMessage').value);
+            localStorage.setItem('ks_pointsPerFollow', document.getElementById('pointsPerFollow').value);
+            localStorage.setItem('ks_pointsPerSub', document.getElementById('pointsPerSub').value);
             showSuccess('pointsSuccess');
         }
 
         function getRewards() {
-            return JSON.parse(localStorage.getItem('rewards')) || DEFAULT_REWARDS;
+            return JSON.parse(localStorage.getItem('ks_rewards')) || DEFAULT_REWARDS;
         }
 
         function renderRewardsPublic(rewards) {
-            const currentUser = localStorage.getItem('currentUser');
-            const users = JSON.parse(localStorage.getItem('users')) || {};
+            const currentUser = localStorage.getItem('ks_currentUser');
+            const users = JSON.parse(localStorage.getItem('ks_users')) || {};
             const user = users[currentUser] || { points: 0, redemptions: [] };
             const redemptions = user.redemptions || [];
 
@@ -896,10 +896,10 @@
         function confirmRedeem() {
             if (!pendingRedeem) return;
 
-            const currentUser = localStorage.getItem('currentUser');
+            const currentUser = localStorage.getItem('ks_currentUser');
             if (!currentUser) return;
 
-            const users = JSON.parse(localStorage.getItem('users')) || {};
+            const users = JSON.parse(localStorage.getItem('ks_users')) || {};
             const user = users[currentUser];
 
             if (user.points < pendingRedeem.cost) {
@@ -933,7 +933,7 @@
                 date: new Date().toISOString()
             });
 
-            localStorage.setItem('users', JSON.stringify(users));
+            localStorage.setItem('ks_users', JSON.stringify(users));
 
             if (code && code.length > 0) {
                 document.getElementById('modalTitle').textContent = '✓ Vyzvednuto!';
@@ -988,7 +988,7 @@
             const newId = rewards.length > 0 ? Math.max(...rewards.map(r => r.id)) + 1 : 1;
             rewards.push({ id: newId, name, cost, desc, icon, unlimited, code });
 
-            localStorage.setItem('rewards', JSON.stringify(rewards));
+            localStorage.setItem('ks_rewards', JSON.stringify(rewards));
             renderRewardsPublic(rewards);
             renderRewardsAdmin(rewards);
 
@@ -1018,7 +1018,7 @@
             reward.desc = newDesc;
             reward.code = newCode || '';
 
-            localStorage.setItem('rewards', JSON.stringify(rewards));
+            localStorage.setItem('ks_rewards', JSON.stringify(rewards));
             renderRewardsPublic(rewards);
             renderRewardsAdmin(rewards);
         }
@@ -1026,13 +1026,13 @@
         function deleteReward(id) {
             if (!confirm('Smazat?')) return;
             let rewards = getRewards().filter(r => r.id !== id);
-            localStorage.setItem('rewards', JSON.stringify(rewards));
+            localStorage.setItem('ks_rewards', JSON.stringify(rewards));
             renderRewardsPublic(rewards);
             renderRewardsAdmin(rewards);
         }
 
         function renderUsers() {
-            const users = JSON.parse(localStorage.getItem('users')) || {};
+            const users = JSON.parse(localStorage.getItem('ks_users')) || {};
             const usernames = Object.keys(users);
             const noUsers = document.getElementById('noUsers');
             const table = document.getElementById('usersTable');
@@ -1078,22 +1078,22 @@
 
         function updatePoints(username) {
             const val = parseInt(document.getElementById('points_' + username).value) || 0;
-            const users = JSON.parse(localStorage.getItem('users')) || {};
+            const users = JSON.parse(localStorage.getItem('ks_users')) || {};
             if (users[username]) {
                 users[username].points = val;
-                localStorage.setItem('users', JSON.stringify(users));
-                if (username === localStorage.getItem('currentUser')) updateUserUI();
+                localStorage.setItem('ks_users', JSON.stringify(users));
+                if (username === localStorage.getItem('ks_currentUser')) updateUserUI();
                 renderUsers();
                 renderRewardsPublic(getRewards());
             }
         }
 
         function addPoints(username, amount) {
-            const users = JSON.parse(localStorage.getItem('users')) || {};
+            const users = JSON.parse(localStorage.getItem('ks_users')) || {};
             if (users[username]) {
                 users[username].points = (users[username].points || 0) + amount;
-                localStorage.setItem('users', JSON.stringify(users));
-                if (username === localStorage.getItem('currentUser')) updateUserUI();
+                localStorage.setItem('ks_users', JSON.stringify(users));
+                if (username === localStorage.getItem('ks_currentUser')) updateUserUI();
                 renderUsers();
                 renderRewardsPublic(getRewards());
             }
@@ -1101,12 +1101,12 @@
 
         function resetUser(username) {
             if (!confirm('Resetovat ' + username + '?')) return;
-            const users = JSON.parse(localStorage.getItem('users')) || {};
+            const users = JSON.parse(localStorage.getItem('ks_users')) || {};
             if (users[username]) {
                 users[username].points = 0;
                 users[username].redemptions = [];
-                localStorage.setItem('users', JSON.stringify(users));
-                if (username === localStorage.getItem('currentUser')) updateUserUI();
+                localStorage.setItem('ks_users', JSON.stringify(users));
+                if (username === localStorage.getItem('ks_currentUser')) updateUserUI();
                 renderUsers();
                 renderRewardsPublic(getRewards());
             }
@@ -1121,7 +1121,7 @@
                     perSub: document.getElementById('pointsPerSub').value
                 },
                 rewards: getRewards(),
-                users: JSON.parse(localStorage.getItem('users')) || {}
+                users: JSON.parse(localStorage.getItem('ks_users')) || {}
             };
             const blob = new Blob([JSON.stringify(data, null, 2)], { type: 'application/json' });
             const a = document.createElement('a');
@@ -1138,13 +1138,13 @@
                 try {
                     const data = JSON.parse(e.target.result);
                     if (data.points) {
-                        localStorage.setItem('pointsPerMinute', data.points.perMinute);
-                        localStorage.setItem('pointsPerMessage', data.points.perMessage);
-                        localStorage.setItem('pointsPerFollow', data.points.perFollow);
-                        localStorage.setItem('pointsPerSub', data.points.perSub);
+                        localStorage.setItem('ks_pointsPerMinute', data.points.perMinute);
+                        localStorage.setItem('ks_pointsPerMessage', data.points.perMessage);
+                        localStorage.setItem('ks_pointsPerFollow', data.points.perFollow);
+                        localStorage.setItem('ks_pointsPerSub', data.points.perSub);
                     }
-                    if (data.rewards) localStorage.setItem('rewards', JSON.stringify(data.rewards));
-                    if (data.users) localStorage.setItem('users', JSON.stringify(data.users));
+                    if (data.rewards) localStorage.setItem('ks_rewards', JSON.stringify(data.rewards));
+                    if (data.users) localStorage.setItem('ks_users', JSON.stringify(data.users));
                     loadSettings();
                     updateUserUI();
                     alert('Importovano!');
