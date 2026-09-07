@@ -701,39 +701,19 @@
                 localStorage.removeItem('ks_oauth_state');
 
                 try {
-                    const tokenRes = await fetch('https://id.kick.com/oauth/token', {
+                    const serverUrl = 'http://localhost:3000';
+                    const res = await fetch(serverUrl + '/api/exchange', {
                         method: 'POST',
-                        headers: {
-                            'Content-Type': 'application/x-www-form-urlencoded'
-                        },
-                        body: new URLSearchParams({
-                            grant_type: 'authorization_code',
-                            client_id: '01KJDBHDCTMKE7JFHFDS7PH6X4',
-                            code: code,
-                            redirect_uri: 'https://ytbpetrak7-create.github.io/kickshop/shop.html',
-                            code_verifier: codeVerifier
-                        }).toString()
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({ code, codeVerifier })
                     });
 
-                    if (tokenRes.ok) {
-                        const tokenData = await tokenRes.json();
-                        if (tokenData.access_token) {
-                            const userRes = await fetch('https://api.kick.com/public/v1/users', {
-                                headers: {
-                                    'Authorization': 'Bearer ' + tokenData.access_token
-                                }
-                            });
-
-                            if (userRes.ok) {
-                                const userData = await userRes.json();
-                                if (userData.data) {
-                                    username = userData.data.username || userData.data.name;
-                                }
-                            }
-                        }
+                    if (res.ok) {
+                        const data = await res.json();
+                        username = data.username;
                     }
                 } catch (e) {
-                    console.log('Chyba pri ziskavani jmena:', e);
+                    console.log('Server neni dostupny:', e.message);
                 }
             } else {
                 localStorage.removeItem('ks_pkce_verifier');
