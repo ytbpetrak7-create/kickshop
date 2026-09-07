@@ -689,9 +689,15 @@
             }
 
             if (code) {
-                console.log('Code found, setting user to Petrk7');
-                localStorage.setItem('ks_currentUser', 'Petrak7');
                 window.history.replaceState({}, '', window.location.pathname);
+                let username = localStorage.getItem('ks_currentUser');
+                if (!username || username === 'Petrak7') {
+                    username = prompt('Zadej sve Kick uzivatelske jmeno:');
+                    if (username) {
+                        username = username.trim();
+                        localStorage.setItem('ks_currentUser', username);
+                    }
+                }
             }
 
             const currentUser = localStorage.getItem('ks_currentUser');
@@ -714,7 +720,7 @@
             loadSettings();
             updateUserUI();
 
-            if (currentUser === ADMIN_USER) {
+            if (currentUser && currentUser.toLowerCase() === ADMIN_USER.toLowerCase()) {
                 document.getElementById('adminBtn').style.display = 'block';
             }
         }
