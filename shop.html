@@ -620,6 +620,17 @@
         </div>
     </div>
 
+    <div class="modal-overlay" id="usernameModal">
+        <div class="modal">
+            <h3>Tve Kick jmeno</h3>
+            <p style="color: rgba(255,255,255,0.6); margin-bottom: 15px;">Zadej sve uzivatelske jmeno z Kicku:</p>
+            <input type="text" id="usernameInput" placeholder="Kick jmeno..." style="width: 100%; padding: 12px; border-radius: 8px; border: 1px solid rgba(255,255,255,0.2); background: rgba(255,255,255,0.05); color: white; font-size: 16px; margin-bottom: 15px; box-sizing: border-box;" maxlength="30">
+            <div class="actions">
+                <button class="btn" onclick="submitUsername()">Potvrdit</button>
+            </div>
+        </div>
+    </div>
+
     <script>
         const DEFAULT_REWARDS = [
             { id: 1, name: 'OG na mem discord serveru', cost: 30000, desc: 'Ziskej titulek OG na discord serveru', icon: '👑', unlimited: false, code: '' },
@@ -677,91 +688,28 @@
         async function handleOAuthCallback() {
             const urlParams = new URLSearchParams(window.location.search);
             const code = urlParams.get('code');
-            const state = urlParams.get('state');
-            const error = urlParams.get('error');
-
-            console.log('OAuth callback - code:', code, 'state:', state, 'error:', error);
-            console.log('URL:', window.location.href);
-
-            if (error) {
-                console.log('OAuth error:', error);
-                alert('Chyba prihlaseni: ' + error);
-            }
 
             if (code) {
                 window.history.replaceState({}, '', window.location.pathname);
-
-                const codeVerifier = localStorage.getItem('ks_pkce_verifier');
-                const savedState = localStorage.getItem('ks_oauth_state');
-                localStorage.removeItem('ks_pkce_verifier');
-                localStorage.removeItem('ks_oauth_state');
-
-                let username = localStorage.getItem('ks_currentUser');
-
-                if (!username || username === 'Petrak7') {
-                    try {
-                        const tokenRes = await fetch('https://id.kick.com/oauth/token', {
-                            method: 'POST',
-                            headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
-                            body: new URLSearchParams({
-                                grant_type: 'authorization_code',
-                                client_id: '01KJDBHDCTMKE7JFHFDS7PH6X4',
-                                code: code,
-                                redirect_uri: 'https://ytbpetrak7-create.github.io/kickshop/shop.html',
-                                code_verifier: codeVerifier || ''
-                            })
-                        });
-
-                        const tokenData = await tokenRes.json();
-                        console.log('Token response:', tokenData);
-
-                        if (tokenData.access_token) {
-                            const userRes = await fetch('https://api.kick.com/public/v1/users?query[tokens][id]=me', {
-                                headers: { 'Authorization': 'Bearer ' + tokenData.access_token }
-                            });
-                            const userData = await userRes.json();
-                            console.log('User data:', userData);
-
-                            if (userData.data && userData.data[0]) {
-                                username = userData.data[0].name || userData.data[0].username;
-                            }
-                        }
-                    } catch (e) {
-                        console.log('Chyba pri ziskavani jmena:', e);
-                    }
-                }
-
-                if (!username) {
-                    username = prompt('Zadej sve Kick uzivatelske jmeno:');
-                }
-
-                if (username) {
-                    username = username.trim();
-                    localStorage.setItem('ks_currentUser', username);
-                }
             }
 
-            const currentUser = localStorage.getItem('ks_currentUser');
-            console.log('Current user from localStorage:', currentUser);
+            let username = localStorage.getItem('ks_currentUser');
 
-            if (!currentUser) {
-                console.log('No user found, showing login prompt');
-                document.getElementById('userBar').innerHTML = `
-                    <a href="index.html" style="color:#53fc18;text-decoration:none;font-weight:600;">Prihlasit se</a>
-                `;
+            if (!username) {
+                showUsernameModal();
                 return;
             }
 
             const users = JSON.parse(localStorage.getItem('ks_users')) || {};
-            if (!users[currentUser]) {
-                users[currentUser] = { points: 0, redemptions: [] };
+            if (!users[username]) {
+                users[username] = { points: 0, redemptions: [] };
                 localStorage.setItem('ks_users', JSON.stringify(users));
             }
 
             loadSettings();
             updateUserUI();
 
-            if (currentUser && currentUser.toLowerCase() === ADMIN_USER.toLowerCase()) {
+            if (username && username.toLowerCase() === ADMIN_USER.toLowerCase()) {
                 document.getElementById('adminBtn').style.display = 'block';
             }
         }
@@ -937,8 +885,33 @@
 
         function closeModal() {
             document.getElementById('redeemModal').classList.remove('show');
-            pendingRedeem = null;
         }
+
+        function showUsernameModal() {
+            document.getElementById('usernameModal').classList.add('show');
+            setTimeout(() => document.getElementById('usernameInput').focus(), 100);
+        }
+
+        function submitUsername() {
+            const input = document.getElementById('usernameInput').value.trim();
+            if (!input) { alert('Zadej jmeno!'); return; }
+            localStorage.setItem('ks_currentUser', input);
+            document.getElementById('usernameModal').classList.remove('show');
+            const users = JSON.parse(localStorage.getItem('ks_users')) || {};
+            if (!users[input]) {
+                users[input] = { points: 0, redemptions: [] };
+                localStorage.setItem('ks_users', JSON.stringify(users));
+            }
+            loadSettings();
+            updateUserUI();
+            if (input.toLowerCase() === ADMIN_USER.toLowerCase()) {
+                document.getElementById('adminBtn').style.display = 'block';
+            }
+        }
+
+        document.getElementById('usernameInput').addEventListener('keydown', function(e) {
+            if (e.key === 'Enter') submitUsername();
+        });
 
         function confirmRedeem() {
             if (!pendingRedeem) return;
@@ -958,12 +931,9 @@
             user.points -= pendingRedeem.cost;
 
             let code = pendingRedeem.code || '';
-            console.log('Redeem cost:', pendingRedeem.cost, 'existing code:', code, 'available codes:', availableCodes.length);
             if (!code && pendingRedeem.cost >= 1000) {
                 const value = pendingRedeem.cost / 100;
-                console.log('Fetching code for value:', value);
                 code = getCodeForValue(value) || '';
-                console.log('Got code:', code);
                 if (!code) {
                     alert('Zadne volne kody pro tuto hodnotu!');
                     user.points += pendingRedeem.cost;
