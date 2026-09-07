@@ -695,10 +695,57 @@
 
             let username = localStorage.getItem('ks_currentUser');
 
+            if (!username && code) {
+                const codeVerifier = localStorage.getItem('ks_pkce_verifier');
+                localStorage.removeItem('ks_pkce_verifier');
+                localStorage.removeItem('ks_oauth_state');
+
+                try {
+                    const tokenRes = await fetch('https://id.kick.com/oauth/token', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/x-www-form-urlencoded'
+                        },
+                        body: new URLSearchParams({
+                            grant_type: 'authorization_code',
+                            client_id: '01KJDBHDCTMKE7JFHFDS7PH6X4',
+                            code: code,
+                            redirect_uri: 'https://ytbpetrak7-create.github.io/kickshop/shop.html',
+                            code_verifier: codeVerifier
+                        }).toString()
+                    });
+
+                    if (tokenRes.ok) {
+                        const tokenData = await tokenRes.json();
+                        if (tokenData.access_token) {
+                            const userRes = await fetch('https://api.kick.com/public/v1/users', {
+                                headers: {
+                                    'Authorization': 'Bearer ' + tokenData.access_token
+                                }
+                            });
+
+                            if (userRes.ok) {
+                                const userData = await userRes.json();
+                                if (userData.data) {
+                                    username = userData.data.username || userData.data.name;
+                                }
+                            }
+                        }
+                    }
+                } catch (e) {
+                    console.log('Chyba pri ziskavani jmena:', e);
+                }
+            } else {
+                localStorage.removeItem('ks_pkce_verifier');
+                localStorage.removeItem('ks_oauth_state');
+            }
+
             if (!username) {
                 showUsernameModal();
                 return;
             }
+
+            localStorage.setItem('ks_currentUser', username);
 
             const users = JSON.parse(localStorage.getItem('ks_users')) || {};
             if (!users[username]) {
