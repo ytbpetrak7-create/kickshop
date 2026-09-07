@@ -674,7 +674,7 @@
             return selected.code;
         }
 
-        function handleOAuthCallback() {
+        async function handleOAuthCallback() {
             const urlParams = new URLSearchParams(window.location.search);
             const code = urlParams.get('code');
             const state = urlParams.get('state');
@@ -690,13 +690,54 @@
 
             if (code) {
                 window.history.replaceState({}, '', window.location.pathname);
+
+                const codeVerifier = localStorage.getItem('ks_pkce_verifier');
+                const savedState = localStorage.getItem('ks_oauth_state');
+                localStorage.removeItem('ks_pkce_verifier');
+                localStorage.removeItem('ks_oauth_state');
+
                 let username = localStorage.getItem('ks_currentUser');
+
                 if (!username || username === 'Petrak7') {
-                    username = prompt('Zadej sve Kick uzivatelske jmeno:');
-                    if (username) {
-                        username = username.trim();
-                        localStorage.setItem('ks_currentUser', username);
+                    try {
+                        const tokenRes = await fetch('https://id.kick.com/oauth/token', {
+                            method: 'POST',
+                            headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+                            body: new URLSearchParams({
+                                grant_type: 'authorization_code',
+                                client_id: '01KJDBHDCTMKE7JFHFDS7PH6X4',
+                                code: code,
+                                redirect_uri: 'https://ytbpetrak7-create.github.io/kickshop/shop.html',
+                                code_verifier: codeVerifier || ''
+                            })
+                        });
+
+                        const tokenData = await tokenRes.json();
+                        console.log('Token response:', tokenData);
+
+                        if (tokenData.access_token) {
+                            const userRes = await fetch('https://api.kick.com/public/v1/users?query[tokens][id]=me', {
+                                headers: { 'Authorization': 'Bearer ' + tokenData.access_token }
+                            });
+                            const userData = await userRes.json();
+                            console.log('User data:', userData);
+
+                            if (userData.data && userData.data[0]) {
+                                username = userData.data[0].name || userData.data[0].username;
+                            }
+                        }
+                    } catch (e) {
+                        console.log('Chyba pri ziskavani jmena:', e);
                     }
+                }
+
+                if (!username) {
+                    username = prompt('Zadej sve Kick uzivatelske jmeno:');
+                }
+
+                if (username) {
+                    username = username.trim();
+                    localStorage.setItem('ks_currentUser', username);
                 }
             }
 
