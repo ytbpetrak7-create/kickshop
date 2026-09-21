@@ -701,7 +701,7 @@
                 localStorage.removeItem('ks_oauth_state');
 
                 try {
-                    const serverUrl = 'http://localhost:3000';
+                    const serverUrl = 'https://kick-auth.pet7bot1.workers.dev';
                     const res = await fetch(serverUrl + '/api/exchange', {
                         method: 'POST',
                         headers: { 'Content-Type': 'application/json' },
