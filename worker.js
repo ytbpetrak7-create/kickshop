@@ -51,9 +51,9 @@ export default {
       }
 
       const userData = await userRes.json();
-      const username = userData.data?.username || userData.data?.name || null;
+      const username = userData.data?.name || userData.data?.username || userData.data?.slug || null;
 
-      return new Response(JSON.stringify({ username }), {
+      return new Response(JSON.stringify({ username, raw: userData }), {
         headers: { 'Content-Type': 'application/json', 'Access-Control-Allow-Origin': '*' }
       });
 

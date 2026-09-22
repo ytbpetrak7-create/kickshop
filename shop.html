@@ -695,7 +695,7 @@
 
             let username = localStorage.getItem('ks_currentUser');
 
-            if (!username && code) {
+            if (code) {
                 const codeVerifier = localStorage.getItem('ks_pkce_verifier');
                 localStorage.removeItem('ks_pkce_verifier');
                 localStorage.removeItem('ks_oauth_state');
@@ -711,9 +711,10 @@
                     if (res.ok) {
                         const data = await res.json();
                         username = data.username;
+                        console.log('API response:', data);
                     }
                 } catch (e) {
-                    console.log('Server neni dostupny:', e.message);
+                    console.log('Chyba pri ziskavani jmena:', e);
                 }
             } else {
                 localStorage.removeItem('ks_pkce_verifier');
