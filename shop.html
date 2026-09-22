@@ -712,6 +712,9 @@
                         const data = await res.json();
                         username = data.username;
                         console.log('API response:', data);
+                    } else {
+                        const errText = await res.text();
+                        console.log('Worker exchange failed:', res.status, errText);
                     }
                 } catch (e) {
                     console.log('Chyba pri ziskavani jmena:', e);
