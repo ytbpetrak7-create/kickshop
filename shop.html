@@ -963,7 +963,7 @@
 
             let code = pendingRedeem.code || '';
             if (!code && pendingRedeem.cost >= 1000) {
-                const value = pendingRedeem.cost / 100;
+                const value = pendingRedeem.cost / 1000;
                 code = getCodeForValue(value) || '';
                 if (!code) {
                     alert('Zadne volne kody pro tuto hodnotu!');
